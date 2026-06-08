@@ -23,13 +23,22 @@ Write full singable lyrics (verses + chorus). Keep video.prompt a single vivid s
 
 function extractJson(text: string): unknown {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  const candidate = fenced ? fenced[1] : text;
-  const start = candidate.indexOf('{');
-  const end = candidate.lastIndexOf('}');
-  if (start === -1 || end === -1 || end < start) {
-    throw new Error('brain: model output contained no JSON object');
+  const src = fenced ? fenced[1] : text;
+  const start = src.indexOf('{');
+  if (start === -1) throw new Error('brain: model output contained no JSON object');
+  let depth = 0;
+  let inString = false;
+  let escape = false;
+  for (let i = start; i < src.length; i++) {
+    const ch = src[i];
+    if (escape) { escape = false; continue; }
+    if (ch === '\\' && inString) { escape = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === '{') depth++;
+    else if (ch === '}') { if (--depth === 0) return JSON.parse(src.slice(start, i + 1)); }
   }
-  return JSON.parse(candidate.slice(start, end + 1));
+  throw new Error('brain: model output contained no JSON object');
 }
 
 export class AnthropicBrainProvider implements BrainProvider {
@@ -61,7 +70,8 @@ export class AnthropicBrainProvider implements BrainProvider {
     }
     const parsed = CreativeBriefSchema.safeParse(raw);
     if (!parsed.success) {
-      throw new Error(`brain: model output failed schema validation: ${parsed.error.message}`);
+      const msg = parsed.error.issues.map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`).join('; ');
+      throw new Error(`brain: model output failed schema validation: ${msg}`);
     }
     return parsed.data;
   }

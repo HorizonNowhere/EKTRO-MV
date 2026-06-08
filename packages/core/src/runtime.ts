@@ -12,7 +12,9 @@ export async function runPipeline<State>(cfg: PipelineConfig<State>): Promise<St
   const base: RunContext = {
     workDir: cfg.workDir,
     log: (msg, extra) =>
-      console.log(`[${cfg.name}] ${msg}`, extra === undefined ? '' : extra),
+      extra === undefined
+        ? console.log(`[${cfg.name}] ${msg}`)
+        : console.log(`[${cfg.name}] ${msg}`, extra),
   };
   for (const step of cfg.steps) {
     const ctx = { ...base, state };

@@ -35,4 +35,11 @@ describe('CreativeBriefSchema', () => {
       }),
     ).toThrow();
   });
+
+  it('rejects out-of-range and non-integer durationSec', () => {
+    const base = { title: 'X', style: 'y', video: { prompt: 'p' } };
+    for (const durationSec of [29, 301, 29.5]) {
+      expect(() => CreativeBriefSchema.parse({ ...base, song: { tags: 't', lyrics: 'l', durationSec } })).toThrow();
+    }
+  });
 });

@@ -35,4 +35,14 @@ describe('AnthropicBrainProvider', () => {
     const p = new AnthropicBrainProvider({ client: fakeClient('no json here'), model: 'm' });
     await expect(p.compose('x')).rejects.toThrow(/brain/i);
   });
+
+  it('throws on schema-invalid model output', async () => {
+    const invalid = JSON.stringify({
+      title: 'X', style: 'y', language: 'en',
+      song: { tags: 't', lyrics: 'l', durationSec: 9999 },
+      video: { prompt: 'p', ratio: '9:16', resolution: '720p' },
+    });
+    const p = new AnthropicBrainProvider({ client: fakeClient(invalid), model: 'm' });
+    await expect(p.compose('x')).rejects.toThrow(/brain/i);
+  });
 });
