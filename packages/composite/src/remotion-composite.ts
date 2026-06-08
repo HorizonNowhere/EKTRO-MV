@@ -34,6 +34,7 @@ export class RemotionCompositeProvider implements CompositeProvider {
   }
 
   async render(brief: CreativeBrief, input: CompositeInput, ctx: RunContext): Promise<CompositeResult> {
+    if (!input.clipPaths.length) throw new Error('composite: clipPaths must not be empty');
     const durationSec = await this.probeDuration(input.audioPath).catch(() => brief.song.durationSec);
     const captions = input.srtPath ? parseSrt(await this.readSrt(input.srtPath)) : [];
     const outPath = join(ctx.workDir, 'ektro-mv.mp4');

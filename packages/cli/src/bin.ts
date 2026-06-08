@@ -29,7 +29,23 @@ async function main() {
   const workDir = resolve(args.workDir ?? `./ektro-out/${Date.now()}`);
 
   const { outputMp4 } = await runMv(args.oneLiner, { workDir, brain, music: media.music, video: media.video, subtitle: media.subtitle, composite });
-  console.log(`\n✅ ${args.out ? `(rename ${outputMp4} → ${args.out})` : outputMp4}`);
+
+  const { ffprobeJson, assertDeliveryCompliant } = await import('@ektro-mv/composite');
+  try {
+    assertDeliveryCompliant(await ffprobeJson(outputMp4));
+    console.log('✓ delivery-compliant (h264/yuv420p/aac)');
+  } catch (e) {
+    console.warn(`⚠️  delivery check: ${(e as Error).message}`);
+  }
+
+  if (args.out) {
+    const { rename } = await import('node:fs/promises');
+    const dest = resolve(args.out);
+    await rename(outputMp4, dest);
+    console.log(`\n✅ ${dest}`);
+  } else {
+    console.log(`\n✅ ${outputMp4}`);
+  }
 }
 
 main().catch((e) => { console.error(`\n❌ ${(e as Error).message}`); process.exit(1); });
