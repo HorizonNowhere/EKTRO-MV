@@ -2,24 +2,35 @@
 
 > One sentence → a music video.
 
+[![CI](https://github.com/<your-github-username>/EKTRO-MV/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-github-username>/EKTRO-MV/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
+![pnpm workspace](https://img.shields.io/badge/pnpm-workspace-orange)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
+
 Open-source AI music-video engine + CLI. Type one line, get a finished MV:
 LLM writes the song & shotlist, ACE-Step sings it, Seedance shoots it,
 Whisper captions it, Remotion cuts it.
 
+> Replace `<your-github-username>` in the CI badge above with your GitHub account after the first push.
+
 ## Architecture
 
+```mermaid
+flowchart TD
+    IN["one sentence"] --> BRAIN["Brain · Anthropic Claude<br/>→ CreativeBrief (lyrics, shotlist, style)"]
+    BRAIN --> MUSIC["Music · ACE-Step / ComfyUI<br/>→ song.flac (vocals)"]
+    BRAIN --> VIDEO["Video · Seedance<br/>→ clip.mp4"]
+    MUSIC --> SUB["Subtitle · Whisper<br/>→ captions.srt"]
+    MUSIC --> COMP["Composite · Remotion"]
+    VIDEO --> COMP
+    SUB --> COMP
+    COMP --> OUT["ektro-mv.mp4<br/>H.264 / yuv420p / AAC"]
 ```
-Brain (Anthropic Claude)
-  │  creative brief
-  ▼
-Music (ACE-Step / ComfyUI)  ──── audio.flac
-  │
-  ├─── Video (Seedance)  ──────── clip.mp4
-  │
-  ├─── Subtitle (Whisper) ─────── captions.srt
-  │
-  └─→  Composite (Remotion) ───── ektro-mv.mp4
-```
+
+Every stage is a swappable **provider** behind a small interface in `@ektro-mv/core`
+(`BrainProvider`, `MusicProvider`, `VideoProvider`, `SubtitleProvider`, `CompositeProvider`).
+The defaults above are v1; add your own (Suno, Kling, local models…) by implementing the interface.
 
 ## Hard Prerequisites
 
