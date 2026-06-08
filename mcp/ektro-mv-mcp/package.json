@@ -1,18 +1,16 @@
 {
-  "name": "@ektro-mv/cli",
+  "name": "@ektro-mv/mcp",
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
-  },
-  "bin": { "ektro-mv": "./dist/bin.js" },
+  "bin": { "ektro-mv-mcp": "./dist/bin.js" },
   "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
   "dependencies": {
     "@ektro-mv/core": "workspace:*",
     "@ektro-mv/providers": "workspace:*",
-    "@ektro-mv/composite": "workspace:*"
+    "@ektro-mv/composite": "workspace:*",
+    "@ektro-mv/cli": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "zod": "4.3.6"
   },
   "devDependencies": { "vitest": "^2.1.0" }
 }
