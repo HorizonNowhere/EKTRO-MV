@@ -1,0 +1,10 @@
+{
+  "name": "@ektro-mv/providers",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
+  "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
+  "dependencies": { "@ektro-mv/core": "workspace:*", "zod": "4.3.6" }
+}
