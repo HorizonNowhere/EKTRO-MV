@@ -8,10 +8,11 @@ describe('handleCreate', () => {
       { prompt: 'make a cyberpunk anthem', workDir: '/tmp/w' },
       { run: async (oneLiner) => { received = oneLiner; return { outputMp4: '/tmp/w/ektro-mv.mp4', briefTitle: 'Neon' }; } },
     );
+    const first = res.content[0] as { type: string; text: string };
     expect(received).toBe('make a cyberpunk anthem');
     expect(res.isError).toBeFalsy();
-    expect(res.content[0].text).toMatch(/ektro-mv\.mp4/);
-    expect(res.content[0].text).toMatch(/Neon/);
+    expect(first.text).toMatch(/ektro-mv\.mp4/);
+    expect(first.text).toMatch(/Neon/);
   });
 
   it('returns an error result when the engine throws', async () => {
@@ -19,8 +20,9 @@ describe('handleCreate', () => {
       { prompt: 'x' },
       { run: async () => { throw new Error('seedance down'); } },
     );
+    const first = res.content[0] as { type: string; text: string };
     expect(res.isError).toBe(true);
-    expect(res.content[0].text).toMatch(/seedance down/);
+    expect(first.text).toMatch(/seedance down/);
   });
 
   it('rejects an empty prompt', async () => {

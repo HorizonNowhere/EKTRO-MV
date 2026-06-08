@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 
 export const createInputSchema = z.object({
   prompt: z.string().describe('One sentence describing the music video to create'),
@@ -10,9 +11,7 @@ export interface CreateDeps {
   run: (oneLiner: string, workDir?: string) => Promise<{ outputMp4: string; briefTitle: string }>;
 }
 
-export interface ToolResult { content: Array<{ type: 'text'; text: string }>; isError?: boolean }
-
-export async function handleCreate(args: CreateInput, deps: CreateDeps): Promise<ToolResult> {
+export async function handleCreate(args: CreateInput, deps: CreateDeps): Promise<CallToolResult> {
   const prompt = (args.prompt ?? '').trim();
   if (!prompt) return { content: [{ type: 'text', text: 'error: prompt must not be empty' }], isError: true };
   try {
