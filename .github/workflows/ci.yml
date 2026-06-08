@@ -12,7 +12,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: pnpm }
       - run: pnpm install --frozen-lockfile
+      # Build first: cross-package typecheck/tests resolve workspace deps via their
+      # emitted dist/ (.d.ts + .js), so the declarations must exist before typecheck/test.
+      - run: pnpm build
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm build
       - run: pnpm test
