@@ -2,3 +2,4 @@ packages:
   - packages/*
   - apps/*
   - mcp/*
+  - skill/*

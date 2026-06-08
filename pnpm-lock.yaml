@@ -125,6 +125,12 @@ importers:
         specifier: ^2.1.0
         version: 2.1.9(@types/node@22.19.20)(terser@5.48.0)
 
+  skill/ektro-mv:
+    devDependencies:
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.19.20)(terser@5.48.0)
+
 packages:
 
   '@anthropic-ai/sdk@0.32.1':
