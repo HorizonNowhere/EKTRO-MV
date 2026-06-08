@@ -12,5 +12,5 @@
     "@modelcontextprotocol/sdk": "^1.20.0",
     "zod": "4.3.6"
   },
-  "devDependencies": { "vitest": "^2.1.0" }
+  "devDependencies": { "vitest": "^4.1.8" }
 }
