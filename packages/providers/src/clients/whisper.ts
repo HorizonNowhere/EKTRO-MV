@@ -57,6 +57,7 @@ export interface SrtCaption {
 const WHISPER_PKG = '@remotion/install-whisper-cpp';
 
 export async function ensureWhisper(cfg: WhisperConfig): Promise<void> {
+  if (!cfg.installDir) throw new Error('whisper: installDir is required');
   await mkdir(dirname(cfg.installDir), { recursive: true });
   // Dynamic import via variable keeps the package optional at install time
   // and prevents TS from requiring type declarations for the uninstalled peer.

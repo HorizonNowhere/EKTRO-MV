@@ -12,7 +12,7 @@ const ctx = { workDir: '/tmp/x', log: () => {} };
 function fakeClient(audioFilename: string) {
   return {
     queuePrompt: async () => ({ prompt_id: 'p1', number: 1, node_errors: {} }),
-    waitPrompt: async () => ({ outputs: { '9': { audio: [{ filename: audioFilename, subfolder: '', type: 'output' }] } } }),
+    waitPrompt: async () => ({ outputs: { '8': { audio: [{ filename: audioFilename, subfolder: '', type: 'output' }] } } }),
     downloadOutput: async () => new Uint8Array([1, 2, 3]).buffer,
   } as any;
 }

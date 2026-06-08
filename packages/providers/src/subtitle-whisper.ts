@@ -1,3 +1,4 @@
+import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { SubtitleProvider, SubtitleResult, RunContext, CreativeBrief } from '@ektro-mv/core';
 import {
@@ -25,7 +26,7 @@ export class WhisperSubtitleProvider implements SubtitleProvider {
       installDir: opts.installDir
         ?? process.env.EKTRO_WHISPER_INSTALL_DIR
         ?? process.env.HERMES_WHISPER_INSTALL_DIR
-        ?? '',
+        ?? join(homedir(), '.ektro-whisper'),
       model: opts.model
         ?? (process.env.EKTRO_WHISPER_MODEL as WhisperModel | undefined)
         ?? (process.env.HERMES_WHISPER_MODEL as WhisperModel | undefined)

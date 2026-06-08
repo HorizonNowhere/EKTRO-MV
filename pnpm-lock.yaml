@@ -36,6 +36,16 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
 
+  packages/providers:
+    dependencies:
+      '@ektro-mv/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.19.20)
+
 packages:
 
   '@anthropic-ai/sdk@0.32.1':

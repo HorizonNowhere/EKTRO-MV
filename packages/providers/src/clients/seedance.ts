@@ -88,7 +88,6 @@ export class SeedanceClient {
   private readonly fetchImpl: typeof fetch;
 
   constructor(cfg: SeedanceConfig) {
-    if (!cfg.apiKey) throw new Error('SeedanceClient: apiKey is required');
     this.apiKey = cfg.apiKey;
     this.baseUrl = (cfg.baseUrl ?? 'https://ark.cn-beijing.volces.com/api/v3').replace(/\/$/, '');
     this.defaultModel = cfg.defaultModel ?? SEEDANCE_DEFAULT_MODEL;
@@ -97,6 +96,7 @@ export class SeedanceClient {
   }
 
   async createTask(req: CreateTaskRequest): Promise<CreateTaskResponse> {
+    if (!this.apiKey) throw new Error('SeedanceClient: apiKey is required (set ARK_API_KEY)');
     const res = await this.fetchImpl(`${this.baseUrl}/contents/generations/tasks`, {
       method: 'POST',
       headers: {

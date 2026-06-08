@@ -6,5 +6,6 @@
   "types": "./dist/index.d.ts",
   "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
   "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
-  "dependencies": { "@ektro-mv/core": "workspace:*", "zod": "4.3.6" }
+  "dependencies": { "@ektro-mv/core": "workspace:*" },
+  "devDependencies": { "vitest": "^2.1.0" }
 }
