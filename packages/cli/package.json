@@ -1,0 +1,13 @@
+{
+  "name": "@ektro-mv/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "ektro-mv": "./dist/bin.js" },
+  "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
+  "dependencies": {
+    "@ektro-mv/core": "workspace:*",
+    "@ektro-mv/providers": "workspace:*",
+    "@ektro-mv/composite": "workspace:*"
+  },
+  "devDependencies": { "vitest": "^2.1.0" }
+}
