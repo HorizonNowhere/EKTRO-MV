@@ -68,6 +68,49 @@ pnpm -r typecheck
 pnpm -r build
 ```
 
+## Use from the HERMES agent
+
+EKTRO-MV ships an MCP server (`@ektro-mv/mcp`) and a publishable Hermes skill
+(`skill/ektro-mv/SKILL.md`) so any HERMES agent can drive the engine via one tool call.
+
+### 1. Build the MCP server
+
+```bash
+pnpm --filter @ektro-mv/mcp build
+```
+
+### 2. Register with HERMES (one-time)
+
+```bash
+hermes mcp add ektro-mv --command "node /path/to/EKTRO-MV/mcp/ektro-mv-mcp/dist/bin.js"
+```
+
+Set the required env vars before starting the agent:
+`ANTHROPIC_API_KEY`, `ARK_API_KEY`, `COMFYUI_URL`, `EKTRO_WHISPER_INSTALL_DIR`.
+
+### 3. Call the tool
+
+Once registered, ask HERMES to create a music video and it will call:
+
+```json
+{ "tool": "ektro_mv_create", "arguments": { "prompt": "做一首赛博朋克 AI 觉醒神曲" } }
+```
+
+The tool returns the path to the rendered MP4.
+
+### 4. Install the skill
+
+Copy or symlink `skill/ektro-mv/SKILL.md` into your HERMES skills directory, or run:
+
+```bash
+hermes skills install ./skill/ektro-mv
+```
+
+The skill teaches HERMES when and how to invoke `ektro_mv_create`, and documents the
+`ektro-mv "…"` CLI as a fallback when the MCP server is not available.
+
+---
+
 ## Package Structure
 
 | Package | Role |
@@ -77,6 +120,8 @@ pnpm -r build
 | `packages/composite` | SRT parser, delivery gate, Remotion composite provider |
 | `packages/cli` | `runMv` orchestrator + `ektro-mv` bin |
 | `apps/remotion` | Remotion `MusicVideo` composition (looped video + song + captions) |
+| `mcp/ektro-mv-mcp` | MCP server exposing `ektro_mv_create` over stdio |
+| `skill/ektro-mv` | Publishable Hermes skill (SKILL.md + validation tests) |
 
 ## License
 MIT
