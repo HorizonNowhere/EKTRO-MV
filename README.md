@@ -2,7 +2,7 @@
 
 > One sentence → a music video.
 
-[![CI](https://github.com/<your-github-username>/EKTRO-MV/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-github-username>/EKTRO-MV/actions/workflows/ci.yml)
+[![CI](https://github.com/HorizonNowhere/EKTRO-MV/actions/workflows/ci.yml/badge.svg)](https://github.com/HorizonNowhere/EKTRO-MV/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![pnpm workspace](https://img.shields.io/badge/pnpm-workspace-orange)
@@ -11,8 +11,6 @@
 Open-source AI music-video engine + CLI. Type one line, get a finished MV:
 LLM writes the song & shotlist, ACE-Step sings it, Seedance shoots it,
 Whisper captions it, Remotion cuts it.
-
-> Replace `<your-github-username>` in the CI badge above with your GitHub account after the first push.
 
 ## Architecture
 
