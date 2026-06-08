@@ -49,6 +49,22 @@ importers:
         specifier: 18.3.0
         version: 18.3.0
 
+  packages/cli:
+    dependencies:
+      '@ektro-mv/composite':
+        specifier: workspace:*
+        version: link:../composite
+      '@ektro-mv/core':
+        specifier: workspace:*
+        version: link:../core
+      '@ektro-mv/providers':
+        specifier: workspace:*
+        version: link:../providers
+    devDependencies:
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.19.20)(terser@5.48.0)
+
   packages/composite:
     dependencies:
       '@ektro-mv/core':
