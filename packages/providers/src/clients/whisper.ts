@@ -53,10 +53,15 @@ export interface SrtCaption {
  * Dynamically imports @remotion/install-whisper-cpp at call time.
  * Will throw if the package is not installed — install it as a runtime peer.
  */
+// Use a variable to prevent TS from trying to resolve the optional peer's types.
+const WHISPER_PKG = '@remotion/install-whisper-cpp';
+
 export async function ensureWhisper(cfg: WhisperConfig): Promise<void> {
   await mkdir(dirname(cfg.installDir), { recursive: true });
-  // Dynamic import keeps the package optional at install time.
-  const { installWhisperCpp, downloadWhisperModel } = await import('@remotion/install-whisper-cpp');
+  // Dynamic import via variable keeps the package optional at install time
+  // and prevents TS from requiring type declarations for the uninstalled peer.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { installWhisperCpp, downloadWhisperModel } = await (import(/* @vite-ignore */ WHISPER_PKG) as Promise<any>);
   await installWhisperCpp({ to: cfg.installDir, version: cfg.version ?? DEFAULT_WHISPER_VERSION });
   await downloadWhisperModel({
     folder: cfg.installDir,
@@ -90,8 +95,9 @@ export async function transcribeToSrt(
   cfg: WhisperConfig,
   opts: TranscribeOptions & { srtPath: string },
 ): Promise<SrtCaption[]> {
-  // Dynamic import keeps the package optional at install time.
-  const { transcribe, toCaptions } = await import('@remotion/install-whisper-cpp');
+  // Dynamic import via variable keeps the package optional at install time.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { transcribe, toCaptions } = await (import(/* @vite-ignore */ WHISPER_PKG) as Promise<any>);
   const whisperCppOutput = await transcribe({
     inputPath: opts.audioPath,
     whisperPath: cfg.installDir,
@@ -103,7 +109,7 @@ export async function transcribeToSrt(
   });
   const captions = toCaptions({ whisperCppOutput }).captions;
 
-  const srt: SrtCaption[] = captions.map((c, i) => ({
+  const srt: SrtCaption[] = (captions as Array<{ startMs: number; endMs: number; text: string }>).map((c, i) => ({
     index: i + 1,
     startMs: c.startMs,
     endMs: c.endMs,

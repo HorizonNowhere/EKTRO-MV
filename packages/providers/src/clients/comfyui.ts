@@ -105,7 +105,7 @@ export class ComfyUIClient {
 
   async uploadImage(filename: string, data: Blob | Uint8Array, subfolder = ''): Promise<{ name: string; subfolder: string; type: string }> {
     const form = new FormData();
-    const blob = data instanceof Blob ? data : new Blob([data as unknown as BlobPart]);
+    const blob = data instanceof Blob ? data : new Blob([data]);
     form.append('image', blob, filename);
     if (subfolder) form.append('subfolder', subfolder);
     form.append('overwrite', 'true');
