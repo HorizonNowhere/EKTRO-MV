@@ -12,4 +12,10 @@ describe('parseArgs', () => {
     expect(parseArgs(['-h']).help).toBe(true);
     expect(parseArgs([]).oneLiner).toBe('');
   });
+  it('captures --brief and --skip-subtitles', () => {
+    const a = parseArgs(['--brief', 'b.json', '--skip-subtitles']);
+    expect(a.brief).toBe('b.json');
+    expect(a.skipSubtitles).toBe(true);
+    expect(a.oneLiner).toBe('');
+  });
 });

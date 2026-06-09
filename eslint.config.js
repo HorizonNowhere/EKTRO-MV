@@ -6,6 +6,12 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // Allow intentionally-unused identifiers prefixed with `_` (e.g. interface-mandated args).
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+  {
     // Tests and injected fakes legitimately use `any` and non-null assertions.
     files: ['**/test/**/*.ts'],
     rules: {

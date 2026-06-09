@@ -23,4 +23,18 @@ describe('runMv', () => {
     expect(out.outputMp4).toBe('/out.mp4');
     expect(out.brief.title).toBe('T');
   });
+
+  it('skips the subtitle stage when no subtitle provider is given', async () => {
+    const calls: string[] = [];
+    let srtSeen: string | undefined = 'unset';
+    await runMv('x', {
+      workDir: '/tmp/w',
+      brain: { name: 'b', compose: async () => brief },
+      music: { name: 'm', generate: async () => ({ audioPath: '/a.flac', durationSec: 30 }) },
+      video: { name: 'v', generate: async () => ({ clipPaths: ['/c.mp4'] }) },
+      composite: { name: 'c', render: async (_b, input) => { calls.push('composite'); srtSeen = input.srtPath; return { outputMp4: '/out.mp4' }; } },
+    });
+    expect(calls).toEqual(['composite']);
+    expect(srtSeen).toBeUndefined();
+  });
 });

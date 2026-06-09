@@ -5,3 +5,4 @@ export * from './runtime.js';
 export * from './config.js';
 export { AnthropicBrainProvider } from './brain/anthropic.js';
 export { composeBrief } from './brain/compose.js';
+export { StaticBrainProvider, loadBriefFile } from './brain/static.js';

@@ -9,7 +9,8 @@ export interface RunMvDeps {
   brain: BrainProvider;
   music: MusicProvider;
   video: VideoProvider;
-  subtitle: SubtitleProvider;
+  /** Optional: when omitted, the subtitle stage is skipped and the MV renders without captions. */
+  subtitle?: SubtitleProvider;
   composite: CompositeProvider;
   log?: (msg: string, extra?: unknown) => void;
 }
@@ -27,9 +28,14 @@ export async function runMv(oneLiner: string, deps: RunMvDeps): Promise<RunMvRes
 
   const music = await deps.music.generate(brief, ctx);
   const video = await deps.video.generate(brief, ctx);
-  const subtitle = await deps.subtitle.align(music.audioPath, brief, ctx);
+  let srtPath: string | undefined;
+  if (deps.subtitle) {
+    srtPath = (await deps.subtitle.align(music.audioPath, brief, ctx)).srtPath;
+  } else {
+    log('subtitles: skipped');
+  }
   const composite = await deps.composite.render(
-    brief, { audioPath: music.audioPath, clipPaths: video.clipPaths, srtPath: subtitle.srtPath }, ctx,
+    brief, { audioPath: music.audioPath, clipPaths: video.clipPaths, srtPath }, ctx,
   );
   log(`done → ${composite.outputMp4}`);
   return { brief, outputMp4: composite.outputMp4 };
