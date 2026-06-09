@@ -8,3 +8,6 @@ out/
 media/
 *.log
 .DS_Store
+
+# generated pipeline output
+ektro-out/

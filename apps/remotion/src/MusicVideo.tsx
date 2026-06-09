@@ -1,7 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, Audio, Loop, OffthreadVideo, Sequence, useCurrentFrame, useVideoConfig } from 'remotion';
 import { z } from 'zod';
-import { resolveUrl } from './resolveUrl.js';
+import { resolveUrl } from './resolveUrl';
 
 export const captionSchema = z.object({ startMs: z.number(), endMs: z.number(), text: z.string() });
 

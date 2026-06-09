@@ -1,6 +1,6 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { MusicVideo, musicVideoSchema } from './MusicVideo.js';
+import { MusicVideo, musicVideoSchema } from './MusicVideo';
 
 const RATIO = { width: 1080, height: 1920 }; // 9:16 default
 const FPS = 30;

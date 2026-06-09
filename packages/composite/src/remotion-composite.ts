@@ -51,17 +51,31 @@ export class RemotionCompositeProvider implements CompositeProvider {
 
 async function defaultRender(opts: RenderOptions): Promise<void> {
   const { fileURLToPath } = await import('node:url');
-  const { dirname, resolve } = await import('node:path');
+  const { dirname, resolve, basename } = await import('node:path');
   const { bundle } = await import('@remotion/bundler');
   const { selectComposition, renderMedia } = await import('@remotion/renderer');
+  // OffthreadVideo cannot load file:// URLs — it needs http(s) or a staticFile served from
+  // the bundle's publicDir. The pipeline writes the clip + song into the same workDir, so
+  // serve that dir and reference the assets by basename (resolveUrl → staticFile()).
+  const publicDir = dirname(resolve(opts.inputProps.audioSrc));
+  const inputProps = {
+    ...opts.inputProps,
+    videoSrc: basename(opts.inputProps.videoSrc),
+    audioSrc: basename(opts.inputProps.audioSrc),
+  };
   const here = dirname(fileURLToPath(import.meta.url));
   const entry = resolve(here, '../../../apps/remotion/src/index.ts');
-  const serveUrl = await bundle({ entryPoint: entry });
-  const composition = await selectComposition({ serveUrl, id: 'MusicVideo', inputProps: opts.inputProps });
+  // Use a system Chromium (Chrome/Edge) when provided, to skip Remotion's gated download.
+  const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE || undefined;
+  const serveUrl = await bundle({ entryPoint: entry, publicDir });
+  const composition = await selectComposition({ serveUrl, id: 'MusicVideo', inputProps, browserExecutable });
   // Override durationInFrames so the CLI controls the output length (calculateMetadata is a studio preview fallback)
   const compositionWithDuration = { ...composition, durationInFrames: opts.durationInFrames };
   await renderMedia({
     serveUrl, composition: compositionWithDuration, codec: 'h264',
-    outputLocation: opts.outPath, inputProps: opts.inputProps,
+    // Programmatic renderMedia ignores remotion.config.ts — set delivery encoding here so the
+    // output is broad-platform safe (limited-range yuv420p + BT.709), not full-range yuvj420p.
+    pixelFormat: 'yuv420p', colorSpace: 'bt709',
+    outputLocation: opts.outPath, inputProps, browserExecutable,
   });
 }
