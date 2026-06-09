@@ -56,13 +56,25 @@ export interface SrtCaption {
 // Use a variable to prevent TS from trying to resolve the optional peer's types.
 const WHISPER_PKG = '@remotion/install-whisper-cpp';
 
+// Load the optional peer with a clear, actionable error if it isn't installed.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function loadWhisperCpp(): Promise<any> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (await import(/* @vite-ignore */ WHISPER_PKG)) as any;
+  } catch {
+    throw new Error(
+      'whisper: optional dependency "@remotion/install-whisper-cpp" is not installed. ' +
+        'Install it to enable subtitles ("pnpm add @remotion/install-whisper-cpp"), ' +
+        'or run with --skip-subtitles.',
+    );
+  }
+}
+
 export async function ensureWhisper(cfg: WhisperConfig): Promise<void> {
   if (!cfg.installDir) throw new Error('whisper: installDir is required');
   await mkdir(dirname(cfg.installDir), { recursive: true });
-  // Dynamic import via variable keeps the package optional at install time
-  // and prevents TS from requiring type declarations for the uninstalled peer.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { installWhisperCpp, downloadWhisperModel } = await (import(/* @vite-ignore */ WHISPER_PKG) as Promise<any>);
+  const { installWhisperCpp, downloadWhisperModel } = await loadWhisperCpp();
   await installWhisperCpp({ to: cfg.installDir, version: cfg.version ?? DEFAULT_WHISPER_VERSION });
   await downloadWhisperModel({
     folder: cfg.installDir,
@@ -96,9 +108,7 @@ export async function transcribeToSrt(
   cfg: WhisperConfig,
   opts: TranscribeOptions & { srtPath: string },
 ): Promise<SrtCaption[]> {
-  // Dynamic import via variable keeps the package optional at install time.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { transcribe, toCaptions } = await (import(/* @vite-ignore */ WHISPER_PKG) as Promise<any>);
+  const { transcribe, toCaptions } = await loadWhisperCpp();
   const whisperCppOutput = await transcribe({
     inputPath: opts.audioPath,
     whisperPath: cfg.installDir,

@@ -64,6 +64,21 @@ node packages/cli/dist/bin.js "做一首赛博朋克 AI 觉醒神曲"
 node packages/cli/dist/bin.js "make a cyberpunk anthem" --out mv.mp4 --workdir ./out
 ```
 
+## Subtitles (optional)
+
+The Whisper subtitle stage is **off by default** (run with `--skip-subtitles`, or it is
+skipped automatically when no subtitle provider is wired). To burn lyric captions into the MV:
+
+```bash
+# install the optional peer dependency (kept out of the default install — it's heavy)
+pnpm add -w @remotion/install-whisper-cpp
+# point at a writable install dir; the model downloads on first run
+export EKTRO_WHISPER_INSTALL_DIR=~/.ektro-whisper   # or set in .env
+```
+
+Then run **without** `--skip-subtitles`. Note: transcribing sung vocals is approximate, and
+the first run downloads a whisper.cpp binary + model (~150 MB) from Hugging Face.
+
 ## Development
 
 ```bash
