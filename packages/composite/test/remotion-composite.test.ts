@@ -22,7 +22,7 @@ describe('RemotionCompositeProvider', () => {
     expect(seen.durationInFrames).toBe(12 * 30);
     expect(seen.inputProps.captions).toEqual([{ startMs: 0, endMs: 2000, text: 'hi' }]);
     expect(seen.inputProps.audioSrc).toBe('/a.flac');
-    expect(seen.inputProps.videoSrc).toBe('/c.mp4');
+    expect(seen.inputProps.clips).toEqual([{ src: '/c.mp4', clipDurationSec: 12 }]);
   });
 
   it('works without subtitles (empty captions)', async () => {
@@ -32,5 +32,14 @@ describe('RemotionCompositeProvider', () => {
     });
     await p.render(brief, { audioPath: '/a.flac', clipPaths: ['/c.mp4'] }, ctx);
     expect(seen.inputProps.captions).toEqual([]);
+  });
+
+  it('builds one clip prop per clipPath (multi-shot)', async () => {
+    const seen: any = {};
+    const p = new RemotionCompositeProvider({
+      probeDuration: async () => 10, render: async (o) => { Object.assign(seen, o); },
+    });
+    await p.render(brief, { audioPath: '/a.flac', clipPaths: ['/c0.mp4', '/c1.mp4', '/c2.mp4'] }, ctx);
+    expect(seen.inputProps.clips.map((c: any) => c.src)).toEqual(['/c0.mp4', '/c1.mp4', '/c2.mp4']);
   });
 });

@@ -14,7 +14,7 @@ export const Root: React.FC = () => (
     width={RATIO.width}
     height={RATIO.height}
     schema={musicVideoSchema}
-    defaultProps={{ videoSrc: '', audioSrc: '', title: '', clipDurationSec: 10, captions: [] }}
+    defaultProps={{ clips: [], audioSrc: '', title: '', captions: [] }}
     calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.round((props.captions.at(-1)?.endMs ?? 10000) / 1000 * FPS)) })}
   />
 );

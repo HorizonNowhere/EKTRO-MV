@@ -6,10 +6,12 @@ import { mediaDurationSec } from './duration.js';
 
 const FPS = 30;
 
+export interface ClipProp { src: string; clipDurationSec: number }
+
 export interface RenderOptions {
   durationInFrames: number;
   outPath: string;
-  inputProps: { videoSrc: string; audioSrc: string; title: string; clipDurationSec: number; captions: Caption[] };
+  inputProps: { clips: ClipProp[]; audioSrc: string; title: string; captions: Caption[] };
 }
 
 export interface RemotionCompositeOptions {
@@ -38,12 +40,14 @@ export class RemotionCompositeProvider implements CompositeProvider {
     const durationSec = await this.probeDuration(input.audioPath).catch(() => brief.song.durationSec);
     const captions = input.srtPath ? parseSrt(await this.readSrt(input.srtPath)) : [];
     const outPath = join(ctx.workDir, 'ektro-mv.mp4');
-    const clipDurationSec = await this.probeDuration(input.clipPaths[0]).catch(() => 10);
-    ctx.log(`remotion: rendering ${Math.round(durationSec)}s @ ${this.fps}fps`);
+    const clips = await Promise.all(
+      input.clipPaths.map(async (src) => ({ src, clipDurationSec: await this.probeDuration(src).catch(() => 10) })),
+    );
+    ctx.log(`remotion: rendering ${Math.round(durationSec)}s @ ${this.fps}fps from ${clips.length} clip(s)`);
     await this.doRender({
       durationInFrames: Math.max(1, Math.round(durationSec * this.fps)),
       outPath,
-      inputProps: { videoSrc: input.clipPaths[0], audioSrc: input.audioPath, title: brief.title, clipDurationSec, captions },
+      inputProps: { clips, audioSrc: input.audioPath, title: brief.title, captions },
     });
     return { outputMp4: outPath };
   }
@@ -60,8 +64,8 @@ async function defaultRender(opts: RenderOptions): Promise<void> {
   const publicDir = dirname(resolve(opts.inputProps.audioSrc));
   const inputProps = {
     ...opts.inputProps,
-    videoSrc: basename(opts.inputProps.videoSrc),
     audioSrc: basename(opts.inputProps.audioSrc),
+    clips: opts.inputProps.clips.map((c) => ({ ...c, src: basename(c.src) })),
   };
   const here = dirname(fileURLToPath(import.meta.url));
   const entry = resolve(here, '../../../apps/remotion/src/index.ts');

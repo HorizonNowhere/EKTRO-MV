@@ -1,27 +1,39 @@
 import React from 'react';
-import { AbsoluteFill, Audio, Loop, OffthreadVideo, Sequence, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Audio, Loop, OffthreadVideo, Sequence, Series, useCurrentFrame, useVideoConfig } from 'remotion';
 import { z } from 'zod';
 import { resolveUrl } from './resolveUrl';
 
 export const captionSchema = z.object({ startMs: z.number(), endMs: z.number(), text: z.string() });
+export const clipSchema = z.object({ src: z.string(), clipDurationSec: z.number().positive() });
 
 export const musicVideoSchema = z.object({
-  videoSrc: z.string(),
+  clips: z.array(clipSchema).default([]),
   audioSrc: z.string(),
   title: z.string().default(''),
-  clipDurationSec: z.number().positive().default(10),
   captions: z.array(captionSchema).default([]),
 });
 export type MusicVideoProps = z.infer<typeof musicVideoSchema>;
 
-export const MusicVideo: React.FC<MusicVideoProps> = ({ videoSrc, audioSrc, title, clipDurationSec, captions }) => {
-  const { fps } = useVideoConfig();
-  const loopFrames = Math.max(1, Math.round(clipDurationSec * fps));
+export const MusicVideo: React.FC<MusicVideoProps> = ({ clips, audioSrc, title, captions }) => {
+  const { fps, durationInFrames } = useVideoConfig();
+  const n = clips.length;
+  const slot = n > 0 ? Math.floor(durationInFrames / n) : durationInFrames;
   return (
     <AbsoluteFill style={{ backgroundColor: 'black' }}>
-      <Loop durationInFrames={loopFrames}>
-        <OffthreadVideo src={resolveUrl(videoSrc)} muted />
-      </Loop>
+      {n > 0 ? (
+        <Series>
+          {clips.map((c, i) => (
+            <Series.Sequence
+              key={i}
+              durationInFrames={i === n - 1 ? Math.max(1, durationInFrames - slot * (n - 1)) : Math.max(1, slot)}
+            >
+              <Loop durationInFrames={Math.max(1, Math.round(c.clipDurationSec * fps))}>
+                <OffthreadVideo src={resolveUrl(c.src)} muted />
+              </Loop>
+            </Series.Sequence>
+          ))}
+        </Series>
+      ) : null}
       <Audio src={resolveUrl(audioSrc)} />
       {title ? (
         <Sequence durationInFrames={Math.round(fps * 2)}>

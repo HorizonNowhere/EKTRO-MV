@@ -17,9 +17,11 @@ Reply with ONLY a JSON object, no prose, matching exactly this shape:
   "style": string,
   "language": "zh" | "en",
   "song": { "tags": string, "lyrics": string, "durationSec": number (30-300) },
-  "video": { "prompt": string, "ratio": "9:16"|"16:9"|"1:1", "resolution": "480p"|"720p"|"1080p" }
+  "video": { "prompt": string, "shots": string[], "ratio": "9:16"|"16:9"|"1:1", "resolution": "480p"|"720p"|"1080p" }
 }
-Write full singable lyrics (verses + chorus). Keep video.prompt a single vivid scene.`;
+Write full singable lyrics (verses + chorus). "video.prompt" is the overall scene.
+"video.shots" is 3-5 distinct vivid shot descriptions (different angles/moments of that scene)
+that will be generated as separate clips and sequenced across the song.`;
 
 function extractJson(text: string): unknown {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);

@@ -8,7 +8,13 @@
     "durationSec": 45
   },
   "video": {
-    "prompt": "a lone android slowly awakening in a neon-drenched rain-soaked cyberpunk alley, glowing cyan eyes opening, reflective wet pavement, volumetric light, cinematic, moody, highly detailed",
+    "prompt": "a lone android awakening in a neon-drenched rain-soaked cyberpunk alley, cinematic, moody",
+    "shots": [
+      "extreme close-up of an android's cyan eyes slowly opening, rain droplets on synthetic skin, neon reflections, cinematic",
+      "wide shot of a lone android standing in a neon-drenched rain-soaked cyberpunk alley, volumetric light, reflective wet pavement",
+      "low-angle tracking shot of the android walking forward through glowing holographic signs, sparks, cinematic motion",
+      "the android raising its head toward a break of light between towering neon skyscrapers, hopeful, cinematic"
+    ],
     "ratio": "9:16",
     "resolution": "480p"
   }

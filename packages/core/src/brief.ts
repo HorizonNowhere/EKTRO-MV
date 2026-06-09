@@ -14,7 +14,10 @@ export const CreativeBriefSchema = z.object({
     durationSec: z.number().int().min(30).max(300),
   }),
   video: z.object({
+    /** Overall scene description; used as the single shot when `shots` is omitted. */
     prompt: z.string().min(1),
+    /** Optional per-shot prompts — each becomes one generated clip, sequenced across the song. */
+    shots: z.array(z.string().min(1)).min(1).max(6).optional(),
     ratio: RatioSchema.default('9:16'),
     resolution: ResolutionSchema.default('480p'),
   }),

@@ -27,6 +27,19 @@ describe('SeedanceVideoProvider', () => {
     expect(res.clipPaths[0]).toBe(saved[0]);
   });
 
+  it('generates one clip per shot when brief.video.shots is set', async () => {
+    const saved: string[] = [];
+    let calls = 0;
+    const multi: CreativeBrief = { ...brief, video: { ...brief.video, shots: ['a', 'b', 'c'] } };
+    const p = new SeedanceVideoProvider({
+      client: { generateVideo: async () => { calls++; return { id: 't', status: 'succeeded', content: { video_url: 'https://cdn/v.mp4' } }; } } as any,
+      download: async (_url, dest) => { saved.push(dest); return dest; },
+    });
+    const res = await p.generate(multi, ctx);
+    expect(calls).toBe(3);
+    expect(res.clipPaths.map((p) => p.replace(/.*[\\/]/, ''))).toEqual(['clip-0.mp4', 'clip-1.mp4', 'clip-2.mp4']);
+  });
+
   it('throws when the task has no video url', async () => {
     const p = new SeedanceVideoProvider({
       client: { generateVideo: async () => ({ id: 't', status: 'failed' }) } as any,

@@ -27,17 +27,22 @@ export class SeedanceVideoProvider implements VideoProvider {
   }
 
   async generate(brief: CreativeBrief, ctx: RunContext): Promise<VideoResult> {
-    const input: GenerateVideoInput = {
-      prompt: brief.video.prompt,
-      model: this.fast ? SEEDANCE_FAST_MODEL : undefined,
-      options: { ratio: brief.video.ratio, resolution: brief.video.resolution, duration: 10 },
-    };
-    ctx.log(`seedance: generating (${brief.video.ratio} ${brief.video.resolution})`);
-    const task = await this.client.generateVideo(input);
-    const url = task.content?.video_url;
-    if (!url) throw new Error(`seedance: task ${task.id} produced no video_url (status=${task.status})`);
-    const dest = join(ctx.workDir, 'clip-0.mp4');
-    await this.download(url, dest);
-    return { clipPaths: [dest] };
+    const shots = brief.video.shots ?? [brief.video.prompt];
+    const clipPaths: string[] = [];
+    for (let i = 0; i < shots.length; i++) {
+      const input: GenerateVideoInput = {
+        prompt: shots[i],
+        model: this.fast ? SEEDANCE_FAST_MODEL : undefined,
+        options: { ratio: brief.video.ratio, resolution: brief.video.resolution, duration: 10 },
+      };
+      ctx.log(`seedance: generating shot ${i + 1}/${shots.length} (${brief.video.ratio} ${brief.video.resolution})`);
+      const task = await this.client.generateVideo(input);
+      const url = task.content?.video_url;
+      if (!url) throw new Error(`seedance: shot ${i + 1} task ${task.id} produced no video_url (status=${task.status})`);
+      const dest = join(ctx.workDir, `clip-${i}.mp4`);
+      await this.download(url, dest);
+      clipPaths.push(dest);
+    }
+    return { clipPaths };
   }
 }
