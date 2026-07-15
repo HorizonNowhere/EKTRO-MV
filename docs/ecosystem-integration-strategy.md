@@ -9,7 +9,7 @@ Use a standards-first distribution model:
 1. Publish a version-pinned npm package and official MCP Registry record.
 2. Offer both stdio and secure local Streamable HTTP transports.
 3. Build a native plugin only where the host does not expose a sufficient MCP path (OpenClaw).
-4. Submit small, host-native catalog or documentation contributions after the public package and a real render pass.
+4. Submit small, host-native catalog or documentation contributions after the public package and a real render pass, except where a maintainer has already directed EKTRO-MV to an out-of-tree distribution path.
 5. Keep the complete Ektro story in this repository and linked assets. Upstream submissions stay instructional and avoid promotional copy.
 
 This produces more adoption with less permanent maintenance than copying the same integration into many upstream cores.
@@ -19,7 +19,7 @@ This produces more adoption with less permanent maintenance than copying the sam
 | Priority | Project | Stars snapshot | Official integration surface | Best adoption asset | Upstream action after release |
 |---|---|---:|---|---|---|
 | P0 | [OpenClaw](https://github.com/openclaw/openclaw) | 382.9k | Native TypeScript tool plugin + ClawHub | Native plugin with read-only doctor and optional create tool | Publish on ClawHub; no core PR |
-| P0 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | 214.9k | `optional-mcps` catalog | Version-pinned catalog manifest | Minimal catalog PR |
+| P0 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | 214.9k | External MCP setup or standalone plugin | Version-pinned setup maintained in EKTRO-MV | Honor the decision on #42844; no repeat core/catalog PR unless Nous requests one |
 | P0 | [n8n](https://github.com/n8n-io/n8n) | 196.5k | MCP Client Tool and Registry client | Registry listing + HTTP setup + reviewed workflow template | Publish workflow template after real run |
 | P0 | [OpenCode](https://github.com/anomalyco/opencode) | 185.9k | Local/remote MCP + common-server docs | Copyable config and focused docs example | Docs PR after npm release |
 | P0 | [Langflow](https://github.com/langflow-ai/langflow) | 151.9k | MCP client component | HTTP/stdio import instructions and flow demo | Publish a verified template |
@@ -38,7 +38,8 @@ This produces more adoption with less permanent maintenance than copying the sam
 
 ## Why the acquisition mechanism differs by ecosystem
 
-- **Agent catalogs (Hermes, goose, Cline):** catalog presence is the conversion surface. The upstream entry should explain the capability, prerequisites, cost boundary, and one example. The repository carries the broader Ektro narrative.
+- **Agent catalogs (goose, Cline):** catalog presence is the conversion surface. The upstream entry should explain the capability, prerequisites, cost boundary, and one example. The repository carries the broader Ektro narrative.
+- **Hermes Agent:** its general documentation permits reviewed `optional-mcps` entries, but the maintainer closed EKTRO-MV PR #42844 under the in-tree provider-integration policy and explicitly requested a standalone plugin or MCP setup distributed through EKTRO-MV. That project-specific decision takes precedence; do not resubmit the same catalog change.
 - **Plugin marketplaces (OpenClaw, Dify):** installability, permissions, maintenance ownership, screenshots, and a tested package matter more than prose. A native OpenClaw plugin is justified because it is the host's preferred extension boundary.
 - **MCP-native clients (OpenCode, Gemini CLI, Qwen Code, Continue):** a registry record and a copyable, version-pinned config maximize reach. A separate plugin would fragment updates.
 - **Self-hosted web/workflow products (Open WebUI, LibreChat, n8n, Langflow, Flowise):** Streamable HTTP avoids trying to run GPU/local dependencies inside the host container. Templates should preserve human approval before `ektro_mv_create`.
@@ -67,6 +68,10 @@ Do not add hidden telemetry, fingerprinting, install callbacks, or automatic bro
 - At least one real end-to-end MV renders successfully with current providers.
 - Each upstream asset has host-specific install and uninstall steps, exact cost/side-effect disclosure, no secrets, and a named maintenance owner.
 - Links use host-specific attribution; upstream copy remains instructional.
+
+## Surfaces that should not receive a product-specific core PR
+
+Open WebUI, LibreChat, n8n, Langflow, Flowise, Gemini CLI, Qwen Code, OpenCode, Continue, and similar MCP-native hosts already expose a standards-based connection surface. For these projects, publish through the official MCP Registry and maintain host-specific configuration or templates in EKTRO-MV. Open a host documentation or template contribution only after a real connection has been reproduced and the project explicitly accepts that artifact type. Do not duplicate the MCP server as a permanent core integration merely to gain a directory link.
 
 ## Primary documentation used
 

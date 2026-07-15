@@ -20,6 +20,7 @@ const [
   mcpClients,
   upstreamPlaybook,
   releaseWorkflowText,
+  registryWorkflowText,
 ] = await Promise.all([
   readJson('mcp/ektro-mv-mcp/package.json'),
   readJson('mcp/ektro-mv-mcp/server.json'),
@@ -33,12 +34,14 @@ const [
   read('integrations/mcp-clients.md'),
   read('integrations/upstream-submissions.md'),
   read('.github/workflows/release.yml'),
+  read('.github/workflows/publish-mcp-registry.yml'),
 ]);
 
 const hermes = YAML.parse(hermesText);
 const goose = YAML.parse(gooseText);
 const libreChat = YAML.parse(libreChatText);
 const releaseWorkflow = YAML.parse(releaseWorkflowText);
+const registryWorkflow = YAML.parse(registryWorkflowText);
 
 assert(mcpPackage.version === releaseVersion, 'MCP package release version drifted');
 assert(mcpPackage.mcpName === registry.name, 'MCP Registry name must match npm mcpName');
@@ -112,18 +115,28 @@ assert(releaseWorkflow.jobs?.release?.environment === 'npm-release', 'Release wo
 assert(releaseWorkflow.jobs?.release?.if?.includes("refs/heads/main"), 'Release workflow must be restricted to main');
 assert(releaseWorkflowText.includes('package-manager-cache: false'), 'Release workflow must disable dependency caching');
 assert(releaseWorkflowText.includes('scripts/release-packages.mjs'), 'Release workflow must use the audited release script');
-for (const [workflow, text] of [
-  ['release', releaseWorkflowText],
-  ['ci', await read('.github/workflows/ci.yml')],
+assert(registryWorkflow.permissions?.contents === 'read', 'Registry workflow must keep contents read-only');
+assert(registryWorkflow.permissions?.['id-token'] === 'write', 'Registry workflow must request OIDC');
+assert(registryWorkflow.jobs?.publish?.environment === 'mcp-registry-publish', 'Registry workflow must use its protected environment');
+assert(registryWorkflow.jobs?.publish?.if?.includes('refs/heads/main'), 'Registry workflow must be restricted to main');
+assert(registryWorkflowText.includes('/v1.8.0/mcp-publisher_linux_amd64.tar.gz'), 'Registry publisher version must be pinned');
+assert(registryWorkflowText.includes('1370446bbe74d562608e8005a6ccce02d146a661fbd78674e11cc70b9618d6cf'), 'Registry publisher checksum must be pinned');
+assert(registryWorkflowText.includes("npm view '@ektro-mv/mcp@0.2.0' version"), 'Registry publish must require the public npm artifact');
+assert(registryWorkflowText.includes('login github-oidc'), 'Registry publish must use GitHub OIDC');
+assert(registryWorkflowText.includes('inputs.publish'), 'Registry workflow must default to validation-only operation');
+for (const [workflow, text, minimumActions] of [
+  ['release', releaseWorkflowText, 3],
+  ['ci', await read('.github/workflows/ci.yml'), 3],
+  ['registry', registryWorkflowText, 1],
 ]) {
   const uses = [...text.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].map((match) => match[1]);
-  assert(uses.length >= 3, `${workflow} workflow must declare its expected actions`);
+  assert(uses.length >= minimumActions, `${workflow} workflow must declare its expected actions`);
   for (const action of uses) {
     assert(/@[0-9a-f]{40}$/.test(action), `${workflow} workflow action must be pinned to a full commit SHA: ${action}`);
   }
 }
 
-process.stdout.write('Verified ecosystem integration contracts and the protected npm release workflow.\n');
+process.stdout.write('Verified ecosystem integration contracts and protected npm/MCP Registry release workflows.\n');
 
 async function read(path) {
   return readFile(resolve(root, path), 'utf8');

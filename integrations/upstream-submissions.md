@@ -6,8 +6,8 @@ This file separates technically ready assets from external publication. Do not o
 
 | Target | Local asset | Current status | External blocker |
 |---|---|---|---|
-| MCP Registry | `mcp/ektro-mv-mcp/server.json` | Official schema validation passes | npm 0.2.0 must be public; Registry login/publish authorization |
-| Hermes Agent | `hermes/optional-mcps/ektro-mv/manifest.yaml` | Manifest is at the exact intended upstream path | public package and one real render |
+| MCP Registry | `mcp/ektro-mv-mcp/server.json` | Official schema validation and protected OIDC publication workflow pass | npm 0.2.0 must be public |
+| Hermes Agent | `hermes/optional-mcps/ektro-mv/manifest.yaml` | Version-pinned setup is distributed from EKTRO-MV | #42844 explicitly declined an in-tree integration; do not repeat the PR |
 | OpenClaw | `openclaw/` | TypeScript build, official metadata check, plugin validation, and package-content check pass | public dependencies, verified ClawHub owner scope, one real render |
 | goose | `goose/ektro-mv.yaml` | Local recipe is usable after npm release | upstream `servers.json` entry and tutorial need public package + tested example output |
 | OpenCode | `mcp-clients.md` | Local config is ready | public package; then a small common-server docs PR |
@@ -19,7 +19,7 @@ This file separates technically ready assets from external publication. Do not o
 1. Publish the six version-aligned npm packages and verify a clean install.
 2. Run one real MV generation and preserve the prompt/brief, doctor output, artifact paths, provider versions, duration, and final MP4 as release evidence.
 3. Publish the MCP Registry record. This is the shared discovery primitive used by multiple clients.
-4. Submit the Hermes catalog manifest, directly answering the maintainer's request to move the integration out of Hermes core.
+4. Close the Hermes feedback loop from the EKTRO-MV side: keep the version-pinned setup here and, after public release evidence exists, add one concise follow-up to #42844. Do not open another Hermes core/catalog PR unless Nous explicitly invites it.
 5. Publish the OpenClaw package to the verified matching ClawHub owner.
 6. Submit the lean goose catalog/tutorial pair and the OpenCode docs example.
 7. Validate and publish workflow templates one host at a time, starting with n8n and Open WebUI.
@@ -38,30 +38,7 @@ This file separates technically ready assets from external publication. Do not o
 
 ### Hermes Agent
 
-Title:
-
-```text
-feat(optional-mcps): add EKTRO-MV music-video server
-```
-
-Body:
-
-```text
-Adds EKTRO-MV as a standalone optional MCP, following the in-tree provider policy discussed in #42844.
-
-- Version-pinned npm stdio transport
-- Read-only doctor tool before generation
-- Explicit confirmation required for external model calls and possible cost
-- Isolated local artifact directories
-- No Hermes core code or maintenance dependency
-
-Verification:
-- clean npm install and MCP handshake
-- doctor contract over stdio
-- real end-to-end render: <release evidence URL>
-```
-
-The PR should contain only `optional-mcps/ektro-mv/manifest.yaml` unless maintainers request more.
+Do not open another in-tree PR. PR #42844 was closed with a concrete request to publish a standalone Hermes plugin or distribute the MCP setup through EKTRO-MV. This repository now owns the version-pinned setup, security guidance, and maintenance surface. After npm publication and a real render, one non-promotional follow-up comment may link to the working install instructions and thank the maintainer for the routing decision. A standalone Hermes plugin repository is justified only if Hermes-native behavior beyond MCP becomes necessary.
 
 ### OpenClaw
 
