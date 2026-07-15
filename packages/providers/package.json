@@ -1,11 +1,21 @@
 {
   "name": "@ektro-mv/providers",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "ACE-Step, Seedance, and optional Whisper providers for EKTRO-MV.",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/HorizonNowhere/EKTRO-MV#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/HorizonNowhere/EKTRO-MV.git", "directory": "packages/providers" },
+  "bugs": { "url": "https://github.com/HorizonNowhere/EKTRO-MV/issues" },
+  "engines": { "node": ">=20" },
+  "files": ["dist"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
   "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
+  "publishConfig": { "access": "public", "provenance": true },
   "dependencies": { "@ektro-mv/core": "workspace:*" },
+  "peerDependencies": { "@remotion/install-whisper-cpp": "^4.0.0" },
+  "peerDependenciesMeta": { "@remotion/install-whisper-cpp": { "optional": true } },
   "devDependencies": { "vitest": "^2.1.0" }
 }

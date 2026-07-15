@@ -1,6 +1,6 @@
 {
   "name": "ektro-mv",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.2",
@@ -11,7 +11,12 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "verify:docs": "node scripts/verify-doc-localization.mjs",
+    "verify:integrations": "node scripts/verify-integration-contracts.mjs",
+    "verify:packages": "node scripts/verify-package-contents.mjs",
+    "verify:deploy": "node scripts/verify-clean-deploy.mjs",
+    "release:packages": "node scripts/release-packages.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -20,6 +25,7 @@
     "tsx": "^4.19.0",
     "typescript": "5.6.3",
     "typescript-eslint": "^8.10.0",
-    "vitest": "^2.1.0"
+    "vitest": "^2.1.0",
+    "yaml": "2.9.0"
   }
 }

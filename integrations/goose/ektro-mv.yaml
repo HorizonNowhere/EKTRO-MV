@@ -1,0 +1,23 @@
+version: "1.0.0"
+title: Create a Music Video with EKTRO-MV
+description: Run a preflight, review the external-call boundary, and create a delivery-ready music video.
+instructions: |
+  Use ektro_mv_doctor before attempting generation.
+  Explain that music/video creation writes local artifacts and may invoke paid external APIs.
+  Do not call ektro_mv_create until the user explicitly approves those external calls.
+  Keep confirmedExternalCalls false or absent until that approval is present.
+extensions:
+  - type: stdio
+    name: ektro-mv
+    cmd: npx
+    args:
+      - -y
+      - "@ektro-mv/mcp@0.2.0"
+    description: EKTRO-MV music-video generation tools
+activities:
+  - "Check whether this machine is ready to create a music video"
+  - "Turn one sentence into a vertical cyberpunk music video"
+prompt: |
+  First run the EKTRO-MV doctor without subtitles. Report missing prerequisites.
+  If all required checks pass, ask me for a one-sentence creative direction and
+  obtain explicit approval before making external model calls.

@@ -3,12 +3,12 @@ export interface ParsedArgs {
   out?: string;
   workDir?: string;
   brief?: string;
-  skipSubtitles: boolean;
+  subtitles: boolean;
   help: boolean;
 }
 
 export function parseArgs(argv: string[]): ParsedArgs {
-  const res: ParsedArgs = { oneLiner: '', skipSubtitles: false, help: false };
+  const res: ParsedArgs = { oneLiner: '', subtitles: false, help: false };
   const positional: string[] = [];
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -16,7 +16,8 @@ export function parseArgs(argv: string[]): ParsedArgs {
     else if (a === '--out') res.out = argv[++i];
     else if (a === '--workdir') res.workDir = argv[++i];
     else if (a === '--brief') res.brief = argv[++i];
-    else if (a === '--skip-subtitles') res.skipSubtitles = true;
+    else if (a === '--subtitles') res.subtitles = true;
+    else if (a === '--skip-subtitles') res.subtitles = false;
     else if (!a.startsWith('-')) positional.push(a);
   }
   res.oneLiner = positional.join(' ').trim();

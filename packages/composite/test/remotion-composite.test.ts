@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { RemotionCompositeProvider } from '../src/remotion-composite.js';
+import { RemotionCompositeProvider, resolveRemotionEntry } from '../src/remotion-composite.js';
 import type { CreativeBrief } from '@ektro-mv/core';
 
 const brief: CreativeBrief = {
@@ -10,6 +10,10 @@ const brief: CreativeBrief = {
 const ctx = { workDir: '/tmp/x', log: () => {} };
 
 describe('RemotionCompositeProvider', () => {
+  it('resolves the publishable Remotion composition package', () => {
+    expect(resolveRemotionEntry()).toMatch(/apps\/remotion\/src\/index\.ts$/);
+  });
+
   it('renders with captions parsed from srt and duration from audio', async () => {
     const seen: any = {};
     const p = new RemotionCompositeProvider({

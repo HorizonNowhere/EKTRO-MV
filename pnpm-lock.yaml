@@ -29,6 +29,9 @@ importers:
       vitest:
         specifier: ^2.1.0
         version: 2.1.9(@types/node@22.19.20)(terser@5.48.0)
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
 
   apps/remotion:
     dependencies:
@@ -73,6 +76,9 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@types/express':
+        specifier: ^5.0.6
+        version: 5.0.6
       vitest:
         specifier: ^2.1.0
         version: 2.1.9(@types/node@22.19.20)(terser@5.48.0)
@@ -98,6 +104,9 @@ importers:
       '@ektro-mv/core':
         specifier: workspace:*
         version: link:../core
+      '@ektro-mv/remotion':
+        specifier: workspace:*
+        version: link:../../apps/remotion
       '@remotion/bundler':
         specifier: 4.0.473
         version: 4.0.473(postcss@8.5.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -123,6 +132,9 @@ importers:
       '@ektro-mv/core':
         specifier: workspace:*
         version: link:../core
+      '@remotion/install-whisper-cpp':
+        specifier: ^4.0.0
+        version: 4.0.489
     devDependencies:
       vitest:
         specifier: ^2.1.0
@@ -591,6 +603,9 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
+  '@remotion/captions@4.0.489':
+    resolution: {integrity: sha512-5rGS51dIuDuoshi1mCONb64dDjm1VPl2wpfWvS3EPS2YJ3jwcOY2r1p5pxYy/ONEA4upBndNwm+NwOjTwlpcNg==}
+
   '@remotion/cli@4.0.473':
     resolution: {integrity: sha512-Ree1+8FOms9O7Quy2+XU/liEpQxqAxrGbP2itQVrzKA5qG5/RmbLK4Ypys38hWHlJN05Q+Xz1+uwyUDACgTEsw==}
     hasBin: true
@@ -636,6 +651,9 @@ packages:
     resolution: {integrity: sha512-J69HIENHpH1m8I85kTe111viqB5AGgKJdTCSKp4mGBxM95IL4nydzrYxVd91BvWjanQfVVq1C3voaF8YLwkT7A==}
     cpu: [x64]
     os: [win32]
+
+  '@remotion/install-whisper-cpp@4.0.489':
+    resolution: {integrity: sha512-SoYu/UA80YjrlUFaa+NKY7HIHs9IrH6yAt78ttL9IRtOkVtFq/GVQxKtdpV3zNbOP72+IR9HalTRWw5Z4JxnFQ==}
 
   '@remotion/licensing@4.0.473':
     resolution: {integrity: sha512-BBw6SuEWuUD/lYXbLKEC0TTUzW7aLsO0X72pG38W1dOUyfU2KZYYfWGZkd+ermZTWWJ8cW+mevIwloUGk7FRaQ==}
@@ -908,6 +926,12 @@ packages:
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
 
+  '@types/body-parser@1.19.6':
+    resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
+
+  '@types/connect@3.4.38':
+    resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
+
   '@types/dom-mediacapture-transform@0.1.11':
     resolution: {integrity: sha512-Y2p+nGf1bF2XMttBnsVPHUWzRRZzqUoJAKmiP10b5umnO6DDrWI0BrGDJy1pOHoOULVmGSfFNkQrAlC5dcj6nQ==}
 
@@ -922,6 +946,15 @@ packages:
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+
+  '@types/express-serve-static-core@5.1.2':
+    resolution: {integrity: sha512-d3KvEXBSo/lOAMc2u6fkyDHBvetBHeqD7wm/AcXfLpSOQwlmG9D/aQ0SFswVjv05p7ullQS7Mjohj6/VdbZuTg==}
+
+  '@types/express@5.0.6':
+    resolution: {integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==}
+
+  '@types/http-errors@2.0.5':
+    resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -938,8 +971,20 @@ packages:
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
 
+  '@types/qs@6.15.1':
+    resolution: {integrity: sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw==}
+
+  '@types/range-parser@1.2.7':
+    resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
+
   '@types/react@18.3.0':
     resolution: {integrity: sha512-DiUcKjzE6soLyln8NNZmyhcQjVv+WsUIFSqetMN0p8927OztKT4VTfFTqsbAi5oAGIcgOmOajlfBqyptDDjZRw==}
+
+  '@types/send@1.2.1':
+    resolution: {integrity: sha512-arsCikDvlU99zl1g69TcAB3mzZPpxgw0UQnaHeC1Nwb015xp8bknZv5rIfri9xTOcMuaVgvabfIRA7PSZVuZIQ==}
+
+  '@types/serve-static@2.2.0':
+    resolution: {integrity: sha512-8mam4H1NHLtu7nmtalF7eyBH14QyOASmcxHhSfEoRyr0nP/YdoesEtU+uSRvMe96TW/HPTtkoKqQLl53N7UXMQ==}
 
   '@typescript-eslint/eslint-plugin@8.60.1':
     resolution: {integrity: sha512-JQ4S5GB0tfjO8BuJ4fcX+HodkzJjYBV+7OJ+wLygaX7OGQ7FudyHL4NSCA6ob+w3Yn+5MkKIozOwQhXeM7opVg==}
@@ -2418,6 +2463,11 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
+  yaml@2.9.0:
+    resolution: {integrity: sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
@@ -2840,6 +2890,8 @@ snapshots:
       - webpack-cli
       - webpack-hot-middleware
 
+  '@remotion/captions@4.0.489': {}
+
   '@remotion/cli@4.0.473(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@remotion/bundler': 4.0.473(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2893,6 +2945,10 @@ snapshots:
 
   '@remotion/compositor-win32-x64-msvc@4.0.473':
     optional: true
+
+  '@remotion/install-whisper-cpp@4.0.489':
+    dependencies:
+      '@remotion/captions': 4.0.489
 
   '@remotion/licensing@4.0.473': {}
 
@@ -3159,6 +3215,15 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@types/body-parser@1.19.6':
+    dependencies:
+      '@types/connect': 3.4.38
+      '@types/node': 22.19.20
+
+  '@types/connect@3.4.38':
+    dependencies:
+      '@types/node': 22.19.20
+
   '@types/dom-mediacapture-transform@0.1.11':
     dependencies:
       '@types/dom-webcodecs': 0.1.13
@@ -3177,6 +3242,21 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
+  '@types/express-serve-static-core@5.1.2':
+    dependencies:
+      '@types/node': 22.19.20
+      '@types/qs': 6.15.1
+      '@types/range-parser': 1.2.7
+      '@types/send': 1.2.1
+
+  '@types/express@5.0.6':
+    dependencies:
+      '@types/body-parser': 1.19.6
+      '@types/express-serve-static-core': 5.1.2
+      '@types/serve-static': 2.2.0
+
+  '@types/http-errors@2.0.5': {}
+
   '@types/json-schema@7.0.15': {}
 
   '@types/node-fetch@2.6.13':
@@ -3194,10 +3274,23 @@ snapshots:
 
   '@types/prop-types@15.7.15': {}
 
+  '@types/qs@6.15.1': {}
+
+  '@types/range-parser@1.2.7': {}
+
   '@types/react@18.3.0':
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
+
+  '@types/send@1.2.1':
+    dependencies:
+      '@types/node': 22.19.20
+
+  '@types/serve-static@2.2.0':
+    dependencies:
+      '@types/http-errors': 2.0.5
+      '@types/node': 22.19.20
 
   '@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@9.39.4)(typescript@5.6.3))(eslint@9.39.4)(typescript@5.6.3)':
     dependencies:
@@ -4789,6 +4882,8 @@ snapshots:
   ws@8.20.1: {}
 
   yallist@4.0.0: {}
+
+  yaml@2.9.0: {}
 
   yocto-queue@0.1.0: {}
 

@@ -1,0 +1,21 @@
+# Merge these keys into your existing librechat.yaml. For Docker Desktop, start
+# EKTRO-MV's HTTP server on the host as documented in ../http-hosts.md.
+mcpSettings:
+  allowedAddresses:
+    - host.docker.internal:3210
+
+mcpServers:
+  ektro-mv:
+    title: EKTRO-MV
+    description: Create a delivery-ready music video from one sentence or a reviewed creative brief.
+    type: streamable-http
+    url: http://host.docker.internal:3210/mcp
+    headers:
+      Authorization: "Bearer ${EKTRO_MV_MCP_TOKEN}"
+    startup: false
+    initTimeout: 15000
+    timeout: 1800000
+    serverInstructions: |
+      Call ektro_mv_doctor first. The create tool writes files and may invoke
+      paid external APIs. Ask for explicit approval before calling it, and set
+      confirmedExternalCalls to true only after approval.

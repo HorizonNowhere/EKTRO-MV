@@ -1,0 +1,52 @@
+# Upstream-ready path for NousResearch/hermes-agent/optional-mcps/ektro-mv.
+# Submit only after @ektro-mv/mcp@0.2.0 is public and a real render passes.
+manifest_version: 1
+
+name: ektro-mv
+description: Create delivery-ready music videos from one sentence or a reviewed CreativeBrief.
+source: https://github.com/HorizonNowhere/EKTRO-MV
+
+transport:
+  type: stdio
+  command: npx
+  args:
+    - -y
+    - "@ektro-mv/mcp@0.2.0"
+  version: "0.2.0"
+
+auth:
+  type: api_key
+  env:
+    - name: ANTHROPIC_API_KEY
+      prompt: Anthropic API key (optional when every run supplies a reviewed brief)
+      required: false
+      secret: true
+    - name: ARK_API_KEY
+      prompt: Volcengine Ark API key for Seedance video generation
+      required: true
+      secret: true
+    - name: COMFYUI_URL
+      prompt: Local ComfyUI URL with ACE-Step installed
+      default: "http://127.0.0.1:8188"
+      required: true
+      secret: false
+    - name: EKTRO_MV_OUTPUT_ROOT
+      prompt: Root directory for isolated EKTRO-MV run artifacts
+      default: "./ektro-out"
+      required: true
+      secret: false
+
+tools:
+  default_enabled:
+    - ektro_mv_doctor
+    - ektro_mv_create
+
+post_install: |
+  Run `hermes mcp test ektro-mv`, then call the read-only ektro_mv_doctor tool.
+  Music generation requires a running local ComfyUI with ACE-Step and a GPU.
+  Video generation calls Volcengine Seedance and may incur charges. Prompt mode
+  also calls Anthropic. The create tool requires explicit confirmation of those
+  external calls and writes each run below EKTRO_MV_OUTPUT_ROOT.
+
+  Subtitles are disabled by default. To enable them, install the optional
+  @remotion/install-whisper-cpp peer and configure EKTRO_WHISPER_INSTALL_DIR.

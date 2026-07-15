@@ -1,7 +1,14 @@
 {
   "name": "@ektro-mv/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Command-line interface for generating a complete music video with EKTRO-MV.",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/HorizonNowhere/EKTRO-MV#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/HorizonNowhere/EKTRO-MV.git", "directory": "packages/cli" },
+  "bugs": { "url": "https://github.com/HorizonNowhere/EKTRO-MV/issues" },
+  "engines": { "node": ">=20" },
+  "files": ["dist"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -9,6 +16,7 @@
   },
   "bin": { "ektro-mv": "./dist/bin.js" },
   "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
+  "publishConfig": { "access": "public", "provenance": true },
   "dependencies": {
     "@ektro-mv/core": "workspace:*",
     "@ektro-mv/providers": "workspace:*",

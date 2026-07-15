@@ -1,7 +1,14 @@
 {
   "name": "@ektro-mv/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Core types, provider interfaces, and creative brain for EKTRO-MV.",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/HorizonNowhere/EKTRO-MV#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/HorizonNowhere/EKTRO-MV.git", "directory": "packages/core" },
+  "bugs": { "url": "https://github.com/HorizonNowhere/EKTRO-MV/issues" },
+  "engines": { "node": ">=20" },
+  "files": ["dist"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,6 +18,7 @@
     "build": "tsc -b",
     "typecheck": "tsc -p tsconfig.test.json --noEmit"
   },
+  "publishConfig": { "access": "public", "provenance": true },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.0",
     "zod": "4.3.6"

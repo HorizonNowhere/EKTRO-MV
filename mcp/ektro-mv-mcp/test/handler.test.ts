@@ -1,32 +1,72 @@
 import { describe, it, expect } from 'vitest';
-import { handleCreate } from '../src/handler.js';
+import { handleCreate, handleDoctor, PROJECT_URL } from '../src/handler.js';
 
 describe('handleCreate', () => {
-  it('runs the engine and returns the output path as MCP text content', async () => {
-    let received = '';
-    const res = await handleCreate(
-      { prompt: 'make a cyberpunk anthem', workDir: '/tmp/w' },
-      { run: async (oneLiner) => { received = oneLiner; return { outputMp4: '/tmp/w/ektro-mv.mp4', briefTitle: 'Neon' }; } },
+  it('runs the engine and returns structured artifact metadata', async () => {
+    const response = await handleCreate(
+      { prompt: 'make a cyberpunk anthem', confirmedExternalCalls: true },
+      {
+        run: async () => ({
+          runId: 'run-1',
+          outputMp4: '/tmp/w/ektro-mv.mp4',
+          briefTitle: 'Neon',
+          workDir: '/tmp/w',
+          subtitles: false,
+        }),
+      },
     );
-    const first = res.content[0] as { type: string; text: string };
-    expect(received).toBe('make a cyberpunk anthem');
-    expect(res.isError).toBeFalsy();
-    expect(first.text).toMatch(/ektro-mv\.mp4/);
-    expect(first.text).toMatch(/Neon/);
+
+    expect(response.isError).toBeFalsy();
+    expect(response.structuredContent).toMatchObject({
+      ok: true,
+      runId: 'run-1',
+      briefTitle: 'Neon',
+      outputMp4: '/tmp/w/ektro-mv.mp4',
+      projectUrl: PROJECT_URL,
+    });
   });
 
-  it('returns an error result when the engine throws', async () => {
-    const res = await handleCreate(
-      { prompt: 'x' },
-      { run: async () => { throw new Error('seedance down'); } },
-    );
-    const first = res.content[0] as { type: string; text: string };
-    expect(res.isError).toBe(true);
-    expect(first.text).toMatch(/seedance down/);
+  it('requires exactly one of prompt or brief', async () => {
+    const deps = { run: async () => { throw new Error('must not run'); } };
+    const empty = await handleCreate({}, deps);
+    const both = await handleCreate({ prompt: 'x', brief: validBrief(), confirmedExternalCalls: true }, deps);
+    expect(empty.isError).toBe(true);
+    expect(empty.structuredContent).toMatchObject({ errorCode: 'invalid_input' });
+    expect(both.isError).toBe(true);
+    expect(both.structuredContent).toMatchObject({ errorCode: 'invalid_input' });
   });
 
-  it('rejects an empty prompt', async () => {
-    const res = await handleCreate({ prompt: '' }, { run: async () => ({ outputMp4: 'x', briefTitle: 't' }) });
-    expect(res.isError).toBe(true);
+  it('preserves stable runtime error codes', async () => {
+    const error = Object.assign(new Error('missing prerequisites'), { errorCode: 'preflight_failed' });
+    const response = await handleCreate({ prompt: 'x', confirmedExternalCalls: true }, { run: async () => { throw error; } });
+    expect(response.isError).toBe(true);
+    expect(response.structuredContent).toMatchObject({ ok: false, errorCode: 'preflight_failed' });
   });
 });
+
+describe('handleDoctor', () => {
+  it('returns structured checks', async () => {
+    const response = await handleDoctor(
+      { useBrief: true },
+      {
+        doctor: async () => ({
+          ok: true,
+          message: 'ready',
+          checks: [{ name: 'node', ok: true, required: true, message: 'Node 20' }],
+          projectUrl: PROJECT_URL,
+        }),
+      },
+    );
+    expect(response.structuredContent).toMatchObject({ ok: true, message: 'ready' });
+  });
+});
+
+function validBrief() {
+  return {
+    title: 'Neon',
+    style: 'cyberpunk',
+    language: 'en' as const,
+    song: { tags: 'electronic', lyrics: 'wake up', durationSec: 30 },
+    video: { prompt: 'neon city', ratio: '9:16' as const, resolution: '480p' as const },
+  };
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.horizonnowhere/ektro-mv",
+  "title": "EKTRO-MV",
+  "description": "Create delivery-ready music videos from one sentence or a reviewed creative brief.",
+  "repository": {
+    "url": "https://github.com/HorizonNowhere/EKTRO-MV",
+    "source": "github",
+    "id": "1262597268",
+    "subfolder": "mcp/ektro-mv-mcp"
+  },
+  "version": "0.2.0",
+  "websiteUrl": "https://github.com/HorizonNowhere/EKTRO-MV",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@ektro-mv/mcp",
+      "version": "0.2.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "ARK_API_KEY",
+          "description": "Volcengine Ark API key used by the default Seedance video provider.",
+          "format": "string",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "description": "Anthropic API key for prompt mode; not needed when supplying a reviewed brief.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "COMFYUI_URL",
+          "description": "URL of a ComfyUI instance with ACE-Step installed.",
+          "format": "string",
+          "isRequired": true,
+          "isSecret": false,
+          "default": "http://127.0.0.1:8188"
+        },
+        {
+          "name": "EKTRO_MV_OUTPUT_ROOT",
+          "description": "Root directory for isolated music-video run artifacts.",
+          "format": "filepath",
+          "isRequired": false,
+          "isSecret": false,
+          "default": "./ektro-out"
+        }
+      ]
+    }
+  ]
+}
