@@ -4,12 +4,10 @@
 
 # EKTRO-MV
 
-> One sentence → a music video. · 一句话 → 一支完整 MV。
+> One sentence → a music video.
 
 An open-source capability from **[Ektro](https://ektroai.com/?utm_source=github&utm_medium=oss&utm_campaign=ektro_mv&utm_content=readme_en_intro)** — the sovereign runtime for personal AGI.
 EKTRO-MV is a reusable creation engine, not a hosted data trap: outputs stay on the operator's machine and every external provider remains replaceable.
-
-**中文简介：** EKTRO-MV 是 [Ektro](https://ektroai.com/?utm_source=github&utm_medium=oss&utm_campaign=ektro_mv&utm_content=readme_zh_intro) 开源的 AI 音乐视频生成引擎。输入一句中文或英文创意，即可编排歌词、音乐、画面、可选字幕与最终 MP4；产物保留在操作者自己的机器上，模型与服务商均可替换。完整中文文档请阅读 [`README.zh-CN.md`](README.zh-CN.md)。
 
 [![CI](https://github.com/HorizonNowhere/EKTRO-MV/actions/workflows/ci.yml/badge.svg)](https://github.com/HorizonNowhere/EKTRO-MV/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -39,20 +37,11 @@ Every stage is a swappable **provider** behind a small interface in `@ektro-mv/c
 (`BrainProvider`, `MusicProvider`, `VideoProvider`, `SubtitleProvider`, `CompositeProvider`).
 The defaults above are v1; add your own (Suno, Kling, local models…) by implementing the interface.
 
-## China and international users
+## Provider portability
 
-EKTRO-MV treats Chinese and international operators as first-class users, while being explicit about regional provider differences:
+The default stack is one tested implementation, not a platform lock-in. Prompt mode uses Anthropic, while a reviewed structured brief can bypass that dependency. Music runs through local ComfyUI + ACE-Step, and the default video client uses Volcengine Ark with a configurable `ARK_BASE_URL`. Each stage can be replaced by implementing the corresponding provider interface.
 
-| Concern | Chinese operators | International operators |
-|---|---|---|
-| Creative input | Chinese prompts and `language: zh` briefs are supported | English prompts and `language: en` briefs are supported |
-| Creative brain | Default prompt mode uses Anthropic; a reviewed brief removes that dependency | Use Anthropic where available, supply a reviewed brief, or implement another `BrainProvider` |
-| Music | Local ComfyUI + ACE-Step keeps audio generation close to the operator | The same local path works internationally; other music providers can replace it |
-| Video | The default client uses Volcengine Ark and a configurable `ARK_BASE_URL` | Confirm provider/region availability or implement another `VideoProvider` before production use |
-| Data and artifacts | No hidden Ektro telemetry; outputs remain local | The same sovereignty and provider-replacement rules apply |
-| Documentation | [完整简体中文 README](README.zh-CN.md) | This README is the canonical English entry point |
-
-Provider availability, account eligibility, pricing, and generated-media terms vary by region and may change. Verify the current provider terms that apply to you before a paid run.
+Chinese and English prompts are supported. Provider availability, account eligibility, pricing, and generated-media terms vary by location and may change, so verify the terms that apply to your deployment before a paid run. EKTRO-MV adds no hidden Ektro telemetry, and generated artifacts remain in the output location you control.
 
 ## Hard Prerequisites
 

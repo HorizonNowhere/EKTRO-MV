@@ -32,10 +32,21 @@ for (const [path, contents] of [
   }
 }
 
-assert(englishReadme.includes('中文简介'), 'README.md: missing Chinese front-page introduction');
-assert(chineseReadme.includes('China and international users') || chineseReadme.includes('中国用户与国际用户'), 'README.zh-CN.md: missing regional operator guidance');
+assert(englishReadme.includes('## Provider portability'), 'README.md: missing provider portability guidance');
+assert(chineseReadme.includes('## 服务商可替换'), 'README.zh-CN.md: missing provider portability guidance');
+assert(!englishReadme.includes('中文简介'), 'README.md: must link to the Chinese README instead of embedding a second-language introduction');
+assert(!englishReadme.includes('一句话 → 一支完整 MV'), 'README.md: front-page copy must stay English-only');
+assert(!chineseReadme.includes('One sentence → a music video'), 'README.zh-CN.md: front-page copy must stay Chinese-only');
+for (const [path, contents, forbidden] of [
+  ['README.md', englishReadme, ['China and international users', 'Chinese operators', 'International operators']],
+  ['README.zh-CN.md', chineseReadme, ['中国用户与国际用户', '中国用户注意事项', '国际用户注意事项']],
+]) {
+  for (const marker of forbidden) {
+    assert(!contents.includes(marker), `${path}: audience-segmentation label must not return: ${marker}`);
+  }
+}
 assert(mcpReadme.includes('## English') && mcpReadme.includes('## 简体中文'), 'MCP package README must be bilingual');
-assert(openClawReadme.includes('## 简体中文'), 'OpenClaw README: missing Chinese operator guidance');
+assert(openClawReadme.includes('## 简体中文'), 'OpenClaw README: missing Chinese-language section');
 
 const markdownFiles = await collectMarkdown(root);
 let attributedLinks = 0;

@@ -4,7 +4,7 @@
 
 # EKTRO-MV
 
-> 一句话 → 一支完整 MV。· One sentence → a music video.
+> 一句话 → 一支完整 MV。
 
 EKTRO-MV 是 **[Ektro](https://ektroai.com/?utm_source=github&utm_medium=oss&utm_campaign=ektro_mv&utm_content=readme_zh_cn)** 开源的 AI 音乐视频生成引擎。它不是把用户素材锁进云端的托管黑盒：生成产物保留在操作者自己的机器上，创意大脑、音乐、视频、字幕和合成服务都可以替换。
 
@@ -32,20 +32,11 @@ flowchart TD
 
 每个阶段都通过 `@ektro-mv/core` 中的小型接口实现：`BrainProvider`、`MusicProvider`、`VideoProvider`、`SubtitleProvider`、`CompositeProvider`。当前默认组合只是 v1；你可以实现接口，替换成其他云服务或本地模型。
 
-## 中国用户与国际用户
+## 服务商可替换
 
-EKTRO-MV 把中文与国际用户都视为一等用户，同时明确说明服务商的区域差异：
+当前默认技术栈是一套经过验证的实现，不会把项目锁死在某个平台上。一句话模式默认使用 Anthropic；如果传入已经审核的结构化 brief，就不再依赖 Anthropic。音乐默认通过本地 ComfyUI + ACE-Step 生成，视频默认使用火山引擎 Ark，并支持通过 `ARK_BASE_URL` 配置接口地址。每个阶段都可以通过对应的 Provider 接口替换。
 
-| 关注点 | 中国用户 | 国际用户 |
-|---|---|---|
-| 创意输入 | 支持中文 prompt 和 `language: zh` 的结构化 brief | 支持英文 prompt 和 `language: en` 的结构化 brief |
-| 创意大脑 | 默认 prompt 模式使用 Anthropic；传入已审核 brief 后不需要 Anthropic | 在可用地区使用 Anthropic，或提供 brief / 自定义 `BrainProvider` |
-| 音乐 | 本地 ComfyUI + ACE-Step，音频生成尽量留在操作者环境中 | 同样支持本地路径，也可以替换成其他音乐服务 |
-| 视频 | 默认使用火山引擎 Ark，`ARK_BASE_URL` 可配置 | 上线前确认所在地区的账号与服务可用性，或实现其他 `VideoProvider` |
-| 数据与产物 | 没有隐藏的 Ektro 遥测，成片保留在本地 | 同样遵守数据自主和服务商可替换原则 |
-| 文档 | 本文件是完整中文入口 | [`README.md`](README.md) 是标准英文入口 |
-
-服务可用地区、账号资格、价格和生成内容条款可能发生变化。每次付费生成前，请确认适用于你的最新服务条款。
+项目支持中文和英文创意输入。不同服务商的可用地区、账号资格、价格与生成内容条款可能变化，正式付费运行前应确认当前部署适用的最新条款。EKTRO-MV 不包含隐藏的 Ektro 遥测，生成产物保留在你指定的输出位置。
 
 ## 必要环境
 

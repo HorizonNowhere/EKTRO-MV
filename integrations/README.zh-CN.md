@@ -18,18 +18,13 @@ EKTRO-MV 在不同宿主中暴露相同的两个工具：
 | Open WebUI、n8n、Dify、Langflow、Flowise | [`http-hosts.md`](http-hosts.md) | Streamable HTTP | 使用各自 MCP 节点/External Tool，不复制核心插件 |
 | Gemini CLI、Qwen Code、OpenCode、Continue、Cline | [`mcp-clients.md`](mcp-clients.md) | stdio | Registry + 版本锁定配置；保留工具确认流程 |
 
-## 中国用户注意事项
+## 部署与服务商注意事项
 
-- 默认视频 Provider 使用火山引擎 Ark；请确认账号、区域、价格和内容条款。
-- 音乐默认通过本地 ComfyUI + ACE-Step 生成，宿主在 Docker 中时要正确处理宿主机网络地址。
-- 使用结构化 brief 可以跳过 Anthropic 创意大脑；也可以实现其他 `BrainProvider`。
-- 不要在 YAML、Issue、PR 或聊天记录中粘贴真实 API Key。
-
-## 国际用户注意事项
-
-- 默认 Ark endpoint 指向中国区域；上线前确认区域可用性，或实现其他 `VideoProvider`。
+- 默认视频 Provider 使用火山引擎 Ark；正式使用前请确认当前账号、部署地区、价格与内容条款，必要时实现其他 `VideoProvider`。
+- 音乐默认通过本地 ComfyUI + ACE-Step 生成；宿主在 Docker 中时，需要正确配置宿主机网络地址。
+- 使用经过审核的结构化 brief 可以跳过 Anthropic 创意大脑，也可以实现其他 `BrainProvider`。
 - stdio 适合本机 Agent；容器化和 Web 宿主优先使用带 Token 与 Host allowlist 的 HTTP 服务。
-- 不要在无人值守的 Agent 循环中默认允许 `ektro_mv_create`。
+- 不要在无人值守的 Agent 循环中默认允许 `ektro_mv_create`，也不要在 YAML、Issue、PR 或聊天记录中粘贴真实 API Key。
 
 ## 上游发布顺序
 
