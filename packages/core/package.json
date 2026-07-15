@@ -20,7 +20,7 @@
   },
   "publishConfig": { "access": "public", "provenance": true },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.0",
+    "@anthropic-ai/sdk": "^0.102.0",
     "zod": "4.3.6"
   }
 }
