@@ -1,0 +1,67 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact semver already present in every public package
+        required: true
+        default: "0.2.0"
+        type: string
+      publish:
+        description: Publish to npm after all verification gates pass
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-release-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    environment: npm-release
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: 10.33.2
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Pin npm trusted-publishing client
+        run: npm install --global npm@11.6.2
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm verify:docs
+      - run: pnpm verify:integrations
+      - run: pnpm verify:packages
+      - run: pnpm verify:deploy
+
+      - name: Dry-run release tarballs
+        if: ${{ !inputs.publish }}
+        run: node scripts/release-packages.mjs --version "${{ inputs.version }}" --dry-run
+
+      - name: Publish release tarballs
+        if: ${{ inputs.publish }}
+        run: node scripts/release-packages.mjs --version "${{ inputs.version }}" --publish
+        env:
+          # Required only for the first publication of packages that do not yet
+          # exist. Remove this secret after all six packages use npm Trusted
+          # Publishing for this workflow and protected environment.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

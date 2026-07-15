@@ -1,10 +1,16 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createRequire } from 'node:module';
 import type { CompositeProvider, CompositeInput, CompositeResult, RunContext, CreativeBrief } from '@ektro-mv/core';
 import { parseSrt, type Caption } from './srt.js';
 import { mediaDurationSec } from './duration.js';
 
 const FPS = 30;
+const require = createRequire(import.meta.url);
+
+export function resolveRemotionEntry(): string {
+  return require.resolve('@ektro-mv/remotion/entry');
+}
 
 export interface ClipProp { src: string; clipDurationSec: number }
 
@@ -54,7 +60,6 @@ export class RemotionCompositeProvider implements CompositeProvider {
 }
 
 async function defaultRender(opts: RenderOptions): Promise<void> {
-  const { fileURLToPath } = await import('node:url');
   const { dirname, resolve, basename } = await import('node:path');
   const { bundle } = await import('@remotion/bundler');
   const { selectComposition, renderMedia } = await import('@remotion/renderer');
@@ -67,8 +72,9 @@ async function defaultRender(opts: RenderOptions): Promise<void> {
     audioSrc: basename(opts.inputProps.audioSrc),
     clips: opts.inputProps.clips.map((c) => ({ ...c, src: basename(c.src) })),
   };
-  const here = dirname(fileURLToPath(import.meta.url));
-  const entry = resolve(here, '../../../apps/remotion/src/index.ts');
+  // Resolve the separately published composition package instead of relying on
+  // the monorepo's apps/ directory being present after npm installation.
+  const entry = resolveRemotionEntry();
   // Use a system Chromium (Chrome/Edge) when provided, to skip Remotion's gated download.
   const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE || undefined;
   const serveUrl = await bundle({ entryPoint: entry, publicDir });

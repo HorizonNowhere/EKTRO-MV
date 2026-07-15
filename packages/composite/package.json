@@ -1,11 +1,24 @@
 {
   "name": "@ektro-mv/composite",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Delivery validation and Remotion composition for EKTRO-MV.",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/HorizonNowhere/EKTRO-MV#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/HorizonNowhere/EKTRO-MV.git", "directory": "packages/composite" },
+  "bugs": { "url": "https://github.com/HorizonNowhere/EKTRO-MV/issues" },
+  "engines": { "node": ">=20" },
+  "files": ["dist"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
   "scripts": { "build": "tsc -b", "typecheck": "tsc -p tsconfig.test.json --noEmit" },
-  "dependencies": { "@ektro-mv/core": "workspace:*", "@remotion/bundler": "4.0.473", "@remotion/renderer": "4.0.473" },
+  "publishConfig": { "access": "public", "provenance": true },
+  "dependencies": {
+    "@ektro-mv/core": "workspace:*",
+    "@ektro-mv/remotion": "workspace:*",
+    "@remotion/bundler": "4.0.473",
+    "@remotion/renderer": "4.0.473"
+  },
   "devDependencies": { "vitest": "^2.1.0" }
 }

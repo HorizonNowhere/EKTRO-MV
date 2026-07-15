@@ -16,7 +16,8 @@ Options:
   --out <file.mp4>     move the finished MV to this path
   --workdir <dir>      working directory for intermediate + output files
   --brief <file.json>  use a CreativeBrief JSON instead of calling the LLM (no API key needed)
-  --skip-subtitles     render without captions (skips the Whisper stage)
+  --subtitles          opt in to Whisper captions (off by default)
+  --skip-subtitles     explicit compatibility alias for the default
   -h, --help
 
 Env (see .env.example): ANTHROPIC_API_KEY, ARK_API_KEY, COMFYUI_URL, EKTRO_WHISPER_INSTALL_DIR`;
@@ -40,7 +41,7 @@ async function main() {
   });
   const composite = new RemotionCompositeProvider();
   const workDir = resolve(args.workDir ?? `./ektro-out/${Date.now()}`);
-  const subtitle = args.skipSubtitles ? undefined : media.subtitle;
+  const subtitle = args.subtitles ? media.subtitle : undefined;
 
   const { outputMp4 } = await runMv(args.oneLiner || '(from --brief)', { workDir, brain, music: media.music, video: media.video, subtitle, composite });
 

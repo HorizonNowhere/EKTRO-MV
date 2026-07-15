@@ -1,0 +1,23 @@
+{
+  "id": "ektro-mv",
+  "name": "EKTRO-MV",
+  "description": "Check prerequisites and create delivery-ready music videos.",
+  "version": "0.2.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": false
+  },
+  "activation": {
+    "onStartup": true
+  },
+  "skills": ["./skills"],
+  "contracts": {
+    "tools": ["ektro_mv_doctor", "ektro_mv_create"]
+  },
+  "toolMetadata": {
+    "ektro_mv_create": {
+      "optional": true
+    }
+  }
+}

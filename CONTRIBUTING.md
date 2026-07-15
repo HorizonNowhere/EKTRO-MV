@@ -7,9 +7,14 @@ into a finished music video. Contributions — new providers, bug fixes, docs �
 
 ```bash
 pnpm install
-pnpm -r build
+pnpm build
+pnpm lint
 pnpm test          # all unit tests (fully mock-backed, no GPU/keys/network needed)
-pnpm -r typecheck
+pnpm typecheck
+pnpm verify:docs   # bilingual entry points, release markers, and attributed Ektro links
+pnpm verify:integrations # host manifests, safety gates, versions, and upstream-neutral copy
+pnpm verify:packages
+pnpm verify:deploy # packs/installs release tarballs, then exercises stdio + HTTP MCP
 ```
 
 Requirements: Node 20+, pnpm 10+. Running the full pipeline (not the tests) additionally
@@ -46,12 +51,25 @@ relevant interface and inject it — don't fork the orchestrator.
 ## Pull requests
 
 - Keep PRs focused; one logical change per PR.
-- Ensure `pnpm test`, `pnpm -r typecheck`, and `pnpm -r build` all pass.
+- Ensure `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`,
+  `pnpm verify:packages`, and `pnpm verify:deploy` all pass.
 - Conventional commit subjects: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.
+
+## Documentation and localization
+
+- `README.md` is the canonical English entry point and must retain a concise Chinese introduction.
+- `README.zh-CN.md` is the complete Simplified Chinese entry point. User-visible capabilities, versions, install commands, safety boundaries, and integration links must be updated in both files.
+- Keep the English and Chinese Ektro introductions (`docs/EKTRO*.md`) and integration indexes (`integrations/README*.md`) mutually linked.
+- Upstream catalog manifests and PR copy follow each host project's preferred language and style; do not duplicate the full Ektro narrative into upstream repositories.
+- Ektro links in project-owned Markdown must use transparent `utm_source`, `utm_medium`, `utm_campaign`, and `utm_content` parameters. Do not add hidden telemetry as a substitute for link attribution.
 
 ## Security
 
 Never commit API keys, tokens, or private content. See [SECURITY.md](SECURITY.md).
+
+## Releases
+
+Do not publish from a developer laptop. Follow the protected, provenance-preserving process in [RELEASING.md](RELEASING.md).
 
 ## License
 
