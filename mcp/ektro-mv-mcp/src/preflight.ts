@@ -2,6 +2,7 @@ import { access } from 'node:fs/promises';
 import { execFile as execFileCallback } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { promisify } from 'node:util';
+import { sanitizeUrlForLogs } from '@ektro-mv/core';
 import type { DoctorInput, DoctorOutput } from './handler.js';
 import { PROJECT_URL } from './handler.js';
 
@@ -43,7 +44,8 @@ export async function runPreflight(input: DoctorInput, deps: PreflightDeps = {})
 
   const comfyUrl = (env.COMFYUI_URL || 'http://127.0.0.1:8188').replace(/\/$/, '');
   const comfyOk = await urlAvailable(`${comfyUrl}/system_stats`);
-  checks.push(check('comfyui', comfyOk, true, comfyOk ? `reachable at ${comfyUrl}` : `unreachable at ${comfyUrl}`));
+  const displayComfyUrl = sanitizeUrlForLogs(comfyUrl);
+  checks.push(check('comfyui', comfyOk, true, comfyOk ? `reachable at ${displayComfyUrl}` : `unreachable at ${displayComfyUrl}`));
 
   const ffmpeg = env.FFMPEG_PATH || 'ffmpeg';
   const ffprobe = env.FFPROBE_PATH || 'ffprobe';

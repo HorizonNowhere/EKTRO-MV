@@ -54,4 +54,22 @@ describe('runPreflight', () => {
       'whisper_package',
     ]);
   });
+
+  it('does not expose credentials from the configured ComfyUI URL', async () => {
+    const result = await runPreflight(
+      { useBrief: true, includeSubtitles: false },
+      {
+        env: {
+          ARK_API_KEY: 'ark',
+          COMFYUI_URL: 'https://user:pass@comfy.example/api?token=secret#fragment',
+        },
+        nodeVersion: '22.0.0',
+        commandAvailable: async () => true,
+        urlAvailable: async () => true,
+      },
+    );
+
+    const comfy = result.checks.find((row) => row.name === 'comfyui');
+    expect(comfy?.message).toBe('reachable at https://comfy.example/api');
+  });
 });

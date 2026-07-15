@@ -4,6 +4,7 @@ import {
   AnthropicBrainProvider,
   StaticBrainProvider,
   loadConfig,
+  redactSecrets,
 } from '@ektro-mv/core';
 import { defaultMediaProviders } from '@ektro-mv/providers';
 import { RemotionCompositeProvider } from '@ektro-mv/composite';
@@ -87,7 +88,9 @@ export function createRuntime(deps: RuntimeDeps = {}): CreateDeps & DoctorDeps {
             subtitles: !input.skipSubtitles,
           };
         } catch (error) {
-          throw new McpRuntimeError('generation_failed', redactSecrets(errorMessage(error), env));
+          throw new McpRuntimeError('generation_failed', redactSecrets(errorMessage(error), {
+            secrets: [env.ANTHROPIC_API_KEY, env.ARK_API_KEY, env.EKTRO_MV_MCP_TOKEN],
+          }));
         }
       } finally {
         generationInProgress = false;
@@ -121,12 +124,4 @@ export function resolveWorkDir(outputRoot: string | undefined, outputDir: string
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'EKTRO-MV generation failed';
-}
-
-function redactSecrets(message: string, env: NodeJS.ProcessEnv): string {
-  let redacted = message.slice(0, 1_000);
-  for (const value of [env.ANTHROPIC_API_KEY, env.ARK_API_KEY]) {
-    if (value && value.length >= 4) redacted = redacted.replaceAll(value, '[REDACTED]');
-  }
-  return redacted;
 }

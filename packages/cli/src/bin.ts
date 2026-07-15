@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { resolve } from 'node:path';
-import { loadConfig, AnthropicBrainProvider, StaticBrainProvider, loadBriefFile, type BrainProvider } from '@ektro-mv/core';
+import { loadConfig, AnthropicBrainProvider, StaticBrainProvider, loadBriefFile, redactSecrets, type BrainProvider } from '@ektro-mv/core';
 import { defaultMediaProviders } from '@ektro-mv/providers';
 import { RemotionCompositeProvider } from '@ektro-mv/composite';
 import { runMv } from './run.js';
@@ -50,7 +50,7 @@ async function main() {
     assertDeliveryCompliant(await ffprobeJson(outputMp4));
     console.log('✓ delivery-compliant (h264/yuv420p/aac)');
   } catch (e) {
-    console.warn(`⚠️  delivery check: ${(e as Error).message}`);
+    console.warn(`⚠️  delivery check: ${safeErrorMessage(e)}`);
   }
 
   if (args.out) {
@@ -63,4 +63,10 @@ async function main() {
   }
 }
 
-main().catch((e) => { console.error(`\n❌ ${(e as Error).message}`); process.exit(1); });
+function safeErrorMessage(error: unknown): string {
+  return redactSecrets(error instanceof Error ? error.message : 'EKTRO-MV failed', {
+    secrets: [process.env.ANTHROPIC_API_KEY, process.env.ARK_API_KEY, process.env.EKTRO_MV_MCP_TOKEN],
+  });
+}
+
+main().catch((e) => { console.error(`\n❌ ${safeErrorMessage(e)}`); process.exit(1); });

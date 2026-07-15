@@ -5,6 +5,7 @@
  */
 import { mkdir, writeFile, unlink } from 'node:fs/promises';
 import { dirname } from 'node:path';
+import { redactSecrets, sanitizeUrlForLogs } from '@ektro-mv/core';
 
 // ---- Types ----
 
@@ -107,7 +108,9 @@ export class SeedanceClient {
     });
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`Seedance createTask ${res.status}: ${text}`);
+      throw new Error(redactSecrets(`Seedance createTask ${res.status}: ${text}`, {
+        secrets: [this.apiKey],
+      }));
     }
     return res.json() as Promise<CreateTaskResponse>;
   }
@@ -119,7 +122,9 @@ export class SeedanceClient {
     );
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`Seedance getTask ${res.status}: ${text}`);
+      throw new Error(redactSecrets(`Seedance getTask ${res.status}: ${text}`, {
+        secrets: [this.apiKey],
+      }));
     }
     return res.json() as Promise<TaskInfo>;
   }
@@ -182,7 +187,7 @@ export async function downloadVideo(
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const res = await fetch(url);
-      if (!res.ok) throw new Error(`download HTTP ${res.status}: ${url.slice(0, 80)}`);
+      if (!res.ok) throw new Error(`download HTTP ${res.status}: ${sanitizeUrlForLogs(url)}`);
       const buf = Buffer.from(await res.arrayBuffer());
       if (buf.length < 50_000) throw new Error(`download too small (${buf.length} bytes), likely partial`);
       await writeFile(destPath, buf);

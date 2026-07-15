@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { downloadVideo, SeedanceClient } from '../src/clients/seedance.js';
 import { SeedanceVideoProvider } from '../src/video-seedance.js';
 import type { CreativeBrief } from '@ektro-mv/core';
 
@@ -46,5 +47,34 @@ describe('SeedanceVideoProvider', () => {
       download: async (_u, d) => d,
     });
     await expect(p.generate(brief, ctx)).rejects.toThrow(/seedance/i);
+  });
+});
+
+describe('downloadVideo', () => {
+  it('does not expose signed URL credentials when a download fails', async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => new Response('', { status: 403 });
+    try {
+      await expect(downloadVideo(
+        'https://user:pass@cdn.example/video.mp4?token=temporary-secret#fragment',
+        '/tmp/ektro-mv-security-test/video.mp4',
+        1,
+      )).rejects.toThrow('download HTTP 403: https://cdn.example/video.mp4');
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+});
+
+describe('SeedanceClient', () => {
+  it('redacts its API key if an upstream error echoes it', async () => {
+    const client = new SeedanceClient({
+      apiKey: 'secret-ark-value',
+      retries: 0,
+      fetchImpl: async () => new Response('Authorization: Bearer secret-ark-value', { status: 400 }),
+    });
+
+    await expect(client.createTask({ model: 'test-model', content: [] }))
+      .rejects.toThrow('Authorization: Bearer [REDACTED]');
   });
 });
