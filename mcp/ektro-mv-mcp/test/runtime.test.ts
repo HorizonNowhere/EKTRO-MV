@@ -36,6 +36,21 @@ describe('createRuntime', () => {
     await expect(runtime.run({ brief: validBrief(), skipSubtitles: true, confirmedExternalCalls: true })).rejects.toThrow('provider echoed [REDACTED]');
   });
 
+  it('redacts bearer credentials and signed URLs from provider errors', async () => {
+    const runtime = createRuntime({
+      env: { ARK_API_KEY: 'ark' },
+      preflight: ready,
+      runMvImpl: async () => {
+        throw new Error('Authorization: Bearer runtime-token https://cdn.example/video.mp4?token=url-token');
+      },
+    });
+
+    const run = runtime.run({ brief: validBrief(), skipSubtitles: true, confirmedExternalCalls: true });
+    await expect(run).rejects.toThrow(
+      'Authorization: Bearer [REDACTED] https://cdn.example/video.mp4',
+    );
+  });
+
   it('rejects overlapping generations and allows a later run after completion', async () => {
     let releaseFirst!: () => void;
     const firstRun = new Promise<void>((resolve) => { releaseFirst = resolve; });
