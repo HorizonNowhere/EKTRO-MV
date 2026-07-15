@@ -20,4 +20,6 @@ Use stdio when the host runs on the same machine and can start `npx`. Use Stream
 
 The native OpenClaw package is separate from the pnpm workspace because OpenClaw has a stricter Node support window and a large host SDK. It must be built and validated on an OpenClaw-supported Node version before publication.
 
+Track the live status, blocker, evidence, and next action for every target in [ecosystem rollout issue #14](https://github.com/HorizonNowhere/EKTRO-MV/issues/14). The issue is the single dynamic status source; repository docs describe the durable strategy and setup contracts.
+
 See [the ecosystem strategy](../docs/ecosystem-integration-strategy.md) for target selection, [the upstream submission playbook](upstream-submissions.md) for release order and PR scope, and [Ektro's full introduction](../docs/EKTRO.md) for the relationship between this capability and the broader runtime.

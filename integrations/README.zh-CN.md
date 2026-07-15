@@ -40,3 +40,5 @@ npm 0.2.0 六个包
 ```
 
 详细目标选择见[生态调研报告](../docs/ecosystem-integration-strategy.md)，PR 范围、来源参数与发布门禁见[上游提交手册](upstream-submissions.md)，Ektro 的完整中文介绍见 [`docs/EKTRO.zh-CN.md`](../docs/EKTRO.zh-CN.md)。
+
+每个目标项目的实时状态、证据、阻塞项和下一动作统一记录在[生态推进 Issue #14](https://github.com/HorizonNowhere/EKTRO-MV/issues/14)。Issue 是唯一动态状态源；仓库文档只保留长期稳定的策略和接入契约，避免中英文状态表各自漂移。
