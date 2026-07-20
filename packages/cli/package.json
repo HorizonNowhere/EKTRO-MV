@@ -22,5 +22,5 @@
     "@ektro-mv/providers": "workspace:*",
     "@ektro-mv/composite": "workspace:*"
   },
-  "devDependencies": { "vitest": "^2.1.0" }
+  "devDependencies": { "vitest": "^4.1.10" }
 }
