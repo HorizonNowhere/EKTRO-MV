@@ -20,5 +20,5 @@
     "@remotion/bundler": "4.0.473",
     "@remotion/renderer": "4.0.473"
   },
-  "devDependencies": { "vitest": "^2.1.0" }
+  "devDependencies": { "vitest": "^4.1.10" }
 }

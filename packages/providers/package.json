@@ -17,5 +17,5 @@
   "dependencies": { "@ektro-mv/core": "workspace:*" },
   "peerDependencies": { "@remotion/install-whisper-cpp": "^4.0.0" },
   "peerDependenciesMeta": { "@remotion/install-whisper-cpp": { "optional": true } },
-  "devDependencies": { "vitest": "^2.1.0" }
+  "devDependencies": { "vitest": "^4.1.10" }
 }
